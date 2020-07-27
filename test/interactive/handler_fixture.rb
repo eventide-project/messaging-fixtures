@@ -1,6 +1,6 @@
 require_relative 'interactive_init'
 
-context "Fixture" do
+context "Handler Fixture" do
   handler = Controls::Handler.example
   message = Controls::Message.example
   entity = Controls::Entity::Identified.example

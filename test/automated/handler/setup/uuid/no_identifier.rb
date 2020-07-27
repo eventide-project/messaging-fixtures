@@ -1,13 +1,13 @@
-require_relative '../../automated_init'
+require_relative '../../../automated_init'
 
 context "Setup Handler" do
-  context "Time" do
-    context "Handler Doesn't Have a Clock" do
+  context "UUID" do
+    context "Handler Doesn't Have an Identifier" do
       input_message = Controls::Message.example
 
       handler = Controls::Handler.noop
 
-      test "Fixture doesn't set the clock time to the default" do
+      test "Fixture doesn't set the UUID to the default" do
         refute_raises(NoMethodError) do
           fixture = Handler.build(
             handler,

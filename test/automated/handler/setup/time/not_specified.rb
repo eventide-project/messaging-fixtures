@@ -1,7 +1,7 @@
-require_relative '../../automated_init'
+require_relative '../../../automated_init'
 
 context "Setup Handler" do
-  context "Identifier" do
+  context "Time" do
     context "Not Specified" do
       input_message = Controls::Message.example
 
@@ -12,12 +12,12 @@ context "Setup Handler" do
         input_message
       )
 
-      identifier = handler.identifier
+      clock = handler.clock
 
-      default_id = Handler::Defaults.uuid
+      default_time = Handler::Defaults.time
 
-      test "Handler identifier is set to default ID" do
-        assert(identifier.get == default_id)
+      test "Handler clock time is set to default time" do
+        assert(clock.now == default_time)
       end
     end
   end
