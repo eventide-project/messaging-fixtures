@@ -15,14 +15,21 @@ context "Handler Fixture" do
     entity
   ) do |fixture|
 
+    ## returns output message object so that it can be used in
+    ## testing attribute values against input
     fixture.assert_written(output_message_class)
 
+    ## return output message back to handler fixture
+    ## to execute atribute assertions against
     # fixture.assert_written(output_message_class) do |output|
-    #   output.assert_attributes_copied
+    ## If found, call rest of assertions
     #   output.assert_stream_name
-    #   output.assert_follows
     #   output.assert_expected_version
     # end
+
+    # fixture.assert_follows  <-- input message
+
+    # fixture.assert_attributes_copied(attributes)
 
     # fixture.refute_written(alternate_output_message_class)
 

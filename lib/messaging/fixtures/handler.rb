@@ -65,7 +65,7 @@ module Messaging
         end
       end
 
-      def assert_written(message_class)
+      def assert_written(message_class, &action)
         context "Output Message: #{message_class.message_type}" do
           detail "Output Message Class: #{message_class}"
 
@@ -79,15 +79,15 @@ module Messaging
             test "Written" do
               assert(false)
             end
-          else
-            test "Written" do
-              assert(true)
-            end
+            return
           end
 
+          test "Written" do
+            assert(true)
+          end
 
-            # eval output assertions block against writer fixture
-            # writer fixture will have been constructed
+          # eval output assertions block against writer fixture
+          # writer fixture will have been constructed
 
         end
       end
