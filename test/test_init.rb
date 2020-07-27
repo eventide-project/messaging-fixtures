@@ -1,5 +1,7 @@
 puts RUBY_DESCRIPTION
 
+ENV['TEST_BENCH_DETAIL'] ||= ENV['D']
+
 puts
 puts "TEST_BENCH_DETAIL: #{ENV['TEST_BENCH_DETAIL'].inspect}"
 puts

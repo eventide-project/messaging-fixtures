@@ -1,3 +1,6 @@
-require 'test_bench/fixture'
+require 'schema/fixtures'
 
-require 'messaging'
+require 'entity_store'
+
+require 'messaging/fixtures/defaults'
+require 'messaging/fixtures/handler'

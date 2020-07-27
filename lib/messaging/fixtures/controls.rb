@@ -1,1 +1,10 @@
 require 'messaging/controls'
+
+require 'messaging/fixtures/controls/id'
+require 'messaging/fixtures/controls/time'
+require 'messaging/fixtures/controls/message'
+require 'messaging/fixtures/controls/event'
+require 'messaging/fixtures/controls/sequence'
+require 'messaging/fixtures/controls/entity'
+require 'messaging/fixtures/controls/store'
+require 'messaging/fixtures/controls/handler'
