@@ -75,20 +75,11 @@ module Messaging
             event.instance_of?(message_class)
           end
 
-          if message.nil?
-            test "Written" do
-              assert(false)
-            end
-            return
-          end
+          written = !message.nil?
 
           test "Written" do
-            assert(true)
+            assert(written)
           end
-
-          # eval output assertions block against writer fixture
-          # writer fixture will have been constructed
-
         end
       end
     end
