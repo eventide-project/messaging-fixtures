@@ -7,7 +7,7 @@ context "Handler" do
 
     output_message_class = Controls::Event::Output
 
-    context "Message is Written" do
+    context "Message Is Written" do
       fixture = Handler.build(handler, message)
 
       fixture.()

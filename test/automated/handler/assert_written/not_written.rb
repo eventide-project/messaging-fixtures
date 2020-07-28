@@ -5,18 +5,16 @@ context "Handler" do
     handler = Controls::Handler.example
     message = Controls::Message.example
 
-    output_message_class = Controls::Event::Output
+    output_message_class = Class.new do
+      include Messaging::Message
+    end
 
-    context "Message is Not Written" do
-      some_class = Class.new do
-        include Messaging::Message
-      end
-
+    context "Message Is Not Written" do
       fixture = Handler.build(handler, message)
 
       fixture.()
 
-      fixture.assert_written(some_class)
+      fixture.assert_written(output_message_class)
 
       passed = fixture.test_session.test_passed?('Written')
 

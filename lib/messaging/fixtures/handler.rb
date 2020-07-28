@@ -80,6 +80,12 @@ module Messaging
           test "Written" do
             assert(written)
           end
+
+          return if !written
+
+          if not action.nil?
+            action.call(self)
+          end
         end
       end
     end
