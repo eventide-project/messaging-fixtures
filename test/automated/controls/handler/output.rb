@@ -111,7 +111,6 @@ context "Handle" do
             assert(output.follows?(input))
           end
 
-
           context "Expected Version" do
             test "Written with expected version" do
               written_with_expected_version = writer.written?(output) do |_, expected_version|
