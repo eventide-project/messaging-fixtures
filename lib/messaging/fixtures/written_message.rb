@@ -6,17 +6,17 @@ module Messaging
       include TestBench::Fixture
       include Initializer
 
-      initializer :message, :stream_name, :expected_version, :reply_stream_name
+      initializer :message, :stream_name, :expected_version, :reply_stream_name, :action
 
-      def self.build(writer, message_class)
+      def self.build(writer, message_class, &action)
         data = get_data(writer, message_class)
 
-        message = data.message
-        stream_name = data.stream_name
-        expected_version = data.expected_version
-        reply_stream_name = data.reply_stream_name
+        message = data&.message
+        stream_name = data&.stream_name
+        expected_version = data&.expected_version
+        reply_stream_name = data&.reply_stream_name
 
-        new(message, stream_name, expected_version, reply_stream_name)
+        new(message, stream_name, expected_version, reply_stream_name, action)
       end
 
       def self.get_data(writer, message_class)
@@ -37,8 +37,23 @@ module Messaging
         records.first.data
       end
 
-
       def call
+        message_class = message&.class
+
+        context "Written Message: #{message_class&.message_type}" do
+          written = !message.nil?
+
+          test "Written" do
+            detail "Message Class: #{message_class}"
+            assert(written)
+          end
+
+          return if !written || action.nil?
+
+          if not action.nil?
+            action.call(self)
+          end
+        end
       end
 
       def assert_stream_name(stream_name)

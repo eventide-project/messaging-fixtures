@@ -63,25 +63,7 @@ module Messaging
       end
 
       def assert_written(message_class, &action)
-        context "Output Message: #{message_class.message_type}" do
-          detail "Output Message Class: #{message_class}"
-
-          writer = handler.write
-
-          message = writer.one_message do |event|
-            event.instance_of?(message_class)
-          end
-
-          written = !message.nil?
-
-          test "Written" do
-            assert(written)
-          end
-
-          return if !written || action.nil?
-
-          fixture(WrittenMessage, writer, message, &action)
-        end
+        fixture(WrittenMessage, handler.write, message_class, &action)
       end
     end
   end

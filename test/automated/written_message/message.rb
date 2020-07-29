@@ -11,9 +11,9 @@ context "Written Message" do
 
       fixture = WrittenMessage.build(writer, message.class)
 
-      fixture.assert_stream_name(stream_name)
+      fixture.()
 
-      passed = fixture.test_session.test_passed?('Written stream name')
+      passed = fixture.test_session.test_passed?('Written')
 
       test "Passed" do
         assert(passed)
@@ -25,13 +25,11 @@ context "Written Message" do
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
 
-      writer.(message, SecureRandom.hex)
-
       fixture = WrittenMessage.build(writer, message.class)
 
-      fixture.assert_stream_name(stream_name)
+      fixture.()
 
-      passed = fixture.test_session.test_passed?('Written stream name')
+      passed = fixture.test_session.test_passed?('Written')
 
       test "Not Passed" do
         refute(passed)
