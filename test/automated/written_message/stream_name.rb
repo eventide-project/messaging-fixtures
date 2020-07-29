@@ -25,6 +25,8 @@ context "Written Message" do
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
 
+      writer.(message, SecureRandom.hex)
+
       fixture = WrittenMessage.build(writer, message)
 
       fixture.assert_stream_name(stream_name)

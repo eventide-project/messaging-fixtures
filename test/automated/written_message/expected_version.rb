@@ -7,13 +7,13 @@ context "Written Message" do
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
 
-      writer.(message, stream_name)
+      writer.(message, stream_name, expected_version: 11)
 
       fixture = WrittenMessage.build(writer, message)
 
-      fixture.assert_stream_name(stream_name)
+      fixture.assert_expected_version(11)
 
-      passed = fixture.test_session.test_passed?('Written stream name')
+      passed = fixture.test_session.test_passed?('Expected version')
 
       test "Passed" do
         assert(passed)
@@ -25,11 +25,13 @@ context "Written Message" do
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
 
+      writer.(message, stream_name, expected_version: 111)
+
       fixture = WrittenMessage.build(writer, message)
 
-      fixture.assert_stream_name(stream_name)
+      fixture.assert_expected_version(11)
 
-      passed = fixture.test_session.test_passed?('Written stream name')
+      passed = fixture.test_session.test_passed?('Expected version')
 
       test "Not Passed" do
         refute(passed)
