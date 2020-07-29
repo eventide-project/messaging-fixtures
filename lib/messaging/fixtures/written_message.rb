@@ -1,49 +1,70 @@
 module Messaging
   module Fixtures
     class WrittenMessage
+      Error = Class.new(RuntimeError)
+
       include TestBench::Fixture
       include Initializer
 
-      initializer :writer, :message
+      initializer :message, :stream_name, :expected_version, :reply_stream_name
 
-      def self.build(writer, message)
-        new(writer, message)
+      def self.build(writer, message_class)
+        data = get_data(writer, message_class)
+
+        message = data.message
+        stream_name = data.stream_name
+        expected_version = data.expected_version
+        reply_stream_name = data.reply_stream_name
+
+        new(message, stream_name, expected_version, reply_stream_name)
       end
+
+      def self.get_data(writer, message_class)
+        sink = writer.sink
+
+        records = sink.written_records.select do |record|
+          record.data.message.class == message_class
+        end
+
+        if records.length > 1
+          raise Error, "More than one message written (Message Class: #{message_class})"
+        end
+
+        if records.empty?
+          return nil
+        end
+
+        records.first.data
+      end
+
 
       def call
       end
 
       def assert_stream_name(stream_name)
-        captured_stream_name = nil
-        written_to_stream = writer.written?(message) do |written_stream_name|
-          if written_stream_name == stream_name
-            captured_stream_name = written_stream_name
-            true
-          end
-        end
-
-        test "Written stream name" do
+        test "Stream name" do
           detail "Stream Name: #{stream_name}"
-          detail "Written Stream Name: #{captured_stream_name}"
+          detail "Written Stream Name: #{self.stream_name}"
 
-          assert(written_to_stream)
+          assert(stream_name == self.stream_name)
         end
       end
 
       def assert_expected_version(expected_version)
-        captured_expected_version = nil
-        written_with_expected_version = writer.written?(message) do |_, written_expected_version|
-          if written_expected_version == expected_version
-            captured_expected_version = written_expected_version
-            true
-          end
-        end
-
         test "Expected version" do
           detail "Expected Version: #{expected_version}"
-          detail "Written Expected Version: #{captured_expected_version}"
+          detail "Written Expected Version: #{self.expected_version}"
 
-          assert(written_with_expected_version)
+          assert(expected_version == self.expected_version)
+        end
+      end
+
+      def assert_reply_stream_name(reply_stream_name)
+        test "Reply stream name" do
+          detail "Reply stream Name: #{reply_stream_name}"
+          detail "Written reply stream Name: #{self.reply_stream_name}"
+
+          assert(reply_stream_name == self.reply_stream_name)
         end
       end
     end

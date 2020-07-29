@@ -9,7 +9,7 @@ context "Written Message" do
 
       writer.(message, stream_name, expected_version: 11)
 
-      fixture = WrittenMessage.build(writer, message)
+      fixture = WrittenMessage.build(writer, message.class)
 
       fixture.assert_expected_version(11)
 
@@ -27,7 +27,7 @@ context "Written Message" do
 
       writer.(message, stream_name, expected_version: 111)
 
-      fixture = WrittenMessage.build(writer, message)
+      fixture = WrittenMessage.build(writer, message.class)
 
       fixture.assert_expected_version(11)
 

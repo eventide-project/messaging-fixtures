@@ -13,7 +13,7 @@ context "Written Message" do
 
       fixture.assert_stream_name(stream_name)
 
-      passed = fixture.test_session.test_passed?('Stream name')
+      passed = fixture.test_session.test_passed?('Written stream name')
 
       test "Passed" do
         assert(passed)
@@ -31,7 +31,7 @@ context "Written Message" do
 
       fixture.assert_stream_name(stream_name)
 
-      passed = fixture.test_session.test_passed?('Stream name')
+      passed = fixture.test_session.test_passed?('Written stream name')
 
       test "Not Passed" do
         refute(passed)
