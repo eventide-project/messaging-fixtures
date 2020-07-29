@@ -17,5 +17,5 @@ context "Written Message Fixture" do
   )
 
   fixture.assert_stream_name(stream_name)
-  fixture.assert_expected_version(expected_version)
+  fixture.assert_expected_version(expected_version = 11)
 end

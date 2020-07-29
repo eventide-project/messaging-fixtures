@@ -14,14 +14,17 @@ module Messaging
       end
 
       def assert_stream_name(stream_name)
-        written_stream_name = nil
+        captured_stream_name = nil
         written_to_stream = writer.written?(message) do |written_stream_name|
-          written_stream_name == stream_name
+          if written_stream_name == stream_name
+            captured_stream_name = written_stream_name
+            true
+          end
         end
 
         test "Written stream name" do
           detail "Stream Name: #{stream_name}"
-          detail "Written Stream Name: #{written_stream_name}"
+          detail "Written Stream Name: #{captured_stream_name}"
 
           assert(written_to_stream)
         end
