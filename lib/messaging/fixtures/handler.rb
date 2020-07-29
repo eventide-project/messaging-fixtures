@@ -78,11 +78,9 @@ module Messaging
             assert(written)
           end
 
-          return if !written
+          return if !written || action.nil?
 
-          if not action.nil?
-            fixture(WrittenMessage, writer, message, &action)
-          end
+          fixture(WrittenMessage, writer, message, &action)
         end
       end
     end

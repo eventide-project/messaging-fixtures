@@ -1,19 +1,20 @@
 require_relative '../automated_init'
 
 context "Written Message" do
-  context "Stream Name" do
+  context "Reply Stream Name" do
     context "Written" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
+      reply_stream_name = 'someReplyStream'
 
-      writer.(message, stream_name)
+      writer.(message, stream_name, reply_stream_name: reply_stream_name)
 
       fixture = WrittenMessage.build(writer, message.class)
 
-      fixture.assert_stream_name(stream_name)
+      fixture.assert_reply_stream_name(reply_stream_name)
 
-      passed = fixture.test_session.test_passed?('Stream name')
+      passed = fixture.test_session.test_passed?('Reply stream name')
 
       test "Passed" do
         assert(passed)
@@ -24,14 +25,15 @@ context "Written Message" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
+      reply_stream_name = 'someReplyStream'
 
-      writer.(message, SecureRandom.hex)
+      writer.(message, stream_name, reply_stream_name: SecureRandom.hex)
 
       fixture = WrittenMessage.build(writer, message.class)
 
-      fixture.assert_stream_name(stream_name)
+      fixture.assert_reply_stream_name(reply_stream_name)
 
-      passed = fixture.test_session.test_passed?('Stream name')
+      passed = fixture.test_session.test_passed?('Reply stream name')
 
       test "Not Passed" do
         refute(passed)
