@@ -15,9 +15,13 @@ context "Handler Fixture" do
     entity
   ) do |handler|
 
-    handler.assert_written(output_message_class) do |written_message|
+    written_message = handler.assert_written(output_message_class) do |written_message|
       written_message.assert_stream_name(output_stream_name)
     end
+
+    # To Do
+    # handler.assert_attributes_copied(written_message)
+    # handler.assert_attributes_assigned(written_message)
 
   end
 end

@@ -40,11 +40,11 @@ module Messaging
       def call
         message_class = message&.class
 
-        context "Written Message: #{message_class&.message_type}" do
+        context "Written Message: #{message_class&.message_type.inspect}" do
           written = !message.nil?
 
           test "Written" do
-            detail "Message Class: #{message_class}"
+            detail "Message Class: #{message_class.inspect}"
             assert(written)
           end
 
