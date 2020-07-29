@@ -2,15 +2,15 @@ require_relative '../../../automated_init'
 
 context "Handler" do
   context "Assert Written" do
-    handler = Controls::Handler.example
-    message = Controls::Message.example
-
-    output_message_class = Class.new do
-      include Messaging::Message
-    end
-
     context "Block" do
       context "Message Is Not Written" do
+        handler = Controls::Handler.example
+        message = Controls::Message.example
+
+        output_message_class = Class.new do
+          include Messaging::Message
+        end
+
         fixture = Handler.build(handler, message)
 
         fixture.()

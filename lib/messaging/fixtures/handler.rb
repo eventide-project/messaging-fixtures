@@ -81,7 +81,7 @@ module Messaging
           return if !written
 
           if not action.nil?
-            action.call(self)
+            fixture(WrittenMessage, writer, message, &action)
           end
         end
       end

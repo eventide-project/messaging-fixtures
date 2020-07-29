@@ -17,7 +17,9 @@ context "Handler Fixture" do
 
     ## returns output message object so that it can be used in
     ## testing attribute values against input
-    fixture.assert_written(output_message_class)
+    fixture.assert_written(output_message_class) do |written_message|
+      written_message.assert_stream_name(output_stream_name)
+    end
 
     ## return output message back to handler fixture
     ## to execute atribute assertions against
