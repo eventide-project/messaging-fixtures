@@ -1,6 +1,6 @@
 require_relative 'interactive_init'
 
-context "Writer Fixture" do
+context "Written Message Fixture" do
   writer = Messaging::Write::Substitute.build
   message = Controls::Event.example
   stream_name = "example-#{message.example_id}"
@@ -10,10 +10,10 @@ context "Writer Fixture" do
   message_class = message.class
 
   fixture = fixture(
-    Writer,
+    WrittenMessage,
     writer,
-
+    message
   )
 
-  fixture.assert_written(message_class)
+  fixture.assert_stream_name(stream_name)
 end

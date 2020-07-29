@@ -29,7 +29,6 @@ context "Handle" do
 
       handler.store.add(entity.id, entity, entity_version)
 
-
       attribute_names = [
         :example_id,
         :quantity,
@@ -96,7 +95,6 @@ context "Handle" do
             assert(written_to_stream)
           end
 
-
           test "Output follows input" do
             detail "Input Stream Name: #{input.metadata.stream_name.inspect}"
             detail "Output Causation Stream Name: #{output.metadata.causation_message_stream_name.inspect}"
@@ -134,7 +132,6 @@ context "Handle" do
               assert(expected_version_is_entity_version)
             end
           end
-
 
           copied_attribute_names = [
             :example_id,
