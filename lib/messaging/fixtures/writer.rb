@@ -6,11 +6,7 @@ module Messaging
 
       initializer :writer, :message
 
-      def self.build(writer, message_class)
-        message = writer.one_message do |recorded_message|
-          recorded_message.instance_of?(message_class)
-        end
-
+      def self.build(writer, message)
         new(writer, message)
       end
 

@@ -54,14 +54,11 @@ module Messaging
           detail "Entity Class: #{entity.class.name}"
           detail "Entity Sequence: #{entity_sequence.inspect}"
 
-
-          # - - -
           handler.(input_message)
 
           if not action.nil?
             action.call(self)
           end
-
         end
       end
 

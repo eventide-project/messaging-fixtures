@@ -16,5 +16,4 @@ context "Writer Fixture" do
   )
 
   fixture.assert_written(message_class)
-
 end
