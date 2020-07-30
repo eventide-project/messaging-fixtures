@@ -54,6 +54,8 @@ module Messaging
             action.call(self)
           end
         end
+
+        message
       end
 
       def assert_stream_name(stream_name)
