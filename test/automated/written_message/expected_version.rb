@@ -1,7 +1,7 @@
 require_relative '../automated_init'
 
 context "Written Message" do
-  context "Expected Version" do
+  context "Assert Expected Version" do
     context "Written" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example

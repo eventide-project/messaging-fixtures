@@ -1,7 +1,7 @@
 require_relative '../automated_init'
 
 context "Written Message" do
-  context "Stream Name" do
+  context "Assert Stream Name" do
     context "Written" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example
