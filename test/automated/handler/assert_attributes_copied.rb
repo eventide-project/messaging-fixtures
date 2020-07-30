@@ -1,4 +1,4 @@
-require_relative '../../automated_init'
+require_relative '../automated_init'
 
 context "Handler" do
   context "Assert Attributes Copied" do
@@ -9,31 +9,52 @@ context "Handler" do
 
     fixture = Handler.build(handler, message)
 
-    # fixture.()
+    copied_attribute_names = [
+      :example_id,
+      { :quantity => :amount },
+      :time,
+    ]
 
-    # fixture.assert_written(output_message_class)
+    fixture.()
 
-    # passed = fixture.test_session.test_passed?('Written')
+    output_message = fixture.assert_written(output_message_class)
 
-    # test "Passed" do
-    #   assert(passed)
-    # end
+    fixture.assert_attributes_copied(output_message, copied_attribute_names)
+
+    context_text = 'Attributes Copied: Input, Output'
+
+    context "Context: \"#{context_text}\"" do
+      printed = fixture.test_session.context?(context_text)
+
+      test "Printed" do
+        assert(printed)
+      end
+    end
+
+    attribute_context = fixture.test_session[context_text]
+
+    context "example_id" do
+      passed = attribute_context.test?('example_id')
+
+      test "Passed" do
+        assert(passed)
+      end
+    end
+
+    context "quantity => amount" do
+      passed = attribute_context.test?('quantity => amount')
+
+      test "Passed" do
+        assert(passed)
+      end
+    end
+
+    context "time" do
+      passed = attribute_context.test?('time')
+
+      test "Passed" do
+        assert(passed)
+      end
+    end
   end
 end
-__END__
-          copied_attribute_names = [
-            :example_id,
-            { :quantity => :amount },
-            :time,
-          ]
-
-          context "Attributes" do
-            fixture(
-              Schema::Fixtures::Equality,
-              input,
-              output,
-              copied_attribute_names,
-              ignore_class: true,
-              print_title_context: false,
-              attributes_context_name: 'Copied'
-            )

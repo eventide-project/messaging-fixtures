@@ -5,6 +5,8 @@ context "Handler Fixture" do
   message = Controls::Message.example
   entity = Controls::Entity::Identified.example
 
+  entity_version = 11
+
   output_message_class = Controls::Event::Output
   output_stream_name = "example-#{entity.id}"
 
@@ -12,16 +14,27 @@ context "Handler Fixture" do
     Handler,
     handler,
     message,
-    entity
+    entity,
+    entity_version
   ) do |handler|
 
-    written_message = handler.assert_written(output_message_class) do |written_message|
-      written_message.assert_stream_name(output_stream_name)
+    written_message = handler.assert_written(output_message_class) do |f|
+      f.assert_stream_name(output_stream_name)
+      f.assert_expected_version(entity_version)
     end
 
-    # To Do
-    # handler.assert_attributes_copied(written_message)
-    # handler.assert_attributes_assigned(written_message)
+    attributes = [
+      :example_id,
+      { :quantity => :amount },
+      :time,
+    ]
 
+    handler.assert_attributes_copied(written_message, attributes)
   end
 end
+
+__END__
+
+To Do
+handler.assert_attributes_assigned(written_message)
+

@@ -11,7 +11,7 @@ module Messaging
 
       initializer :handler, :input_message, :entity, :entity_version, :time, :uuid, :action
 
-      def self.build(handler, input_message, entity=nil, entity_version: nil, time: nil, uuid: nil, &action)
+      def self.build(handler, input_message, entity=nil, entity_version=nil, time: nil, uuid: nil, &action)
         instance = new(handler, input_message, entity, entity_version, time, uuid, action)
 
         set_store_entity(handler, entity, entity_version)
@@ -52,6 +52,9 @@ module Messaging
           detail "Handler Class: #{handler.class.name}"
 
           detail "Entity Class: #{entity.class.name}"
+          ## Problem: entity might not have sequence
+          ## Maybe don't print this
+          ## Could be something that a user puts in their own test code
           detail "Entity Sequence: #{entity_sequence.inspect}"
 
           handler.(input_message)
@@ -65,6 +68,18 @@ module Messaging
       def assert_written(message_class, &action)
         fixture = fixture(WrittenMessage, handler.write, message_class, &action)
         fixture.message
+      end
+
+      def assert_attributes_copied(output_message, attribute_names=nil)
+        fixture(
+          Schema::Fixtures::Equality,
+          input_message,
+          output_message,
+          attribute_names,
+          ignore_class: true,
+          print_title_context: false,
+          attributes_context_name: "Attributes Copied: #{input_message.class.message_type}, #{output_message.class.message_type}"
+        )
       end
     end
   end

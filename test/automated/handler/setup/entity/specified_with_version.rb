@@ -15,7 +15,7 @@ context "Handler" do
             handler,
             input_message,
             entity,
-            entity_version: 11
+            11
           )
 
           store = handler.store
