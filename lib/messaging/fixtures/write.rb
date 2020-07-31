@@ -40,7 +40,7 @@ module Messaging
       def call
         message_class = message&.class
 
-        context "Written Message: #{message_class&.message_type || 'nil'}" do
+        context "Write: #{message_class&.message_type || 'nil'}" do
           written = !message.nil?
 
           test "Written" do

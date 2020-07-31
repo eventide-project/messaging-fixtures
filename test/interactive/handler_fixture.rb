@@ -26,14 +26,20 @@ context "Handler Fixture" do
       f.assert_expected_version(entity_version)
     end
 
-    handler.assert_attributes_copied(written_message, [
+    # handler.assert_attributes_copied(written_message, [
+    #   :example_id,
+    #   { :quantity => :amount },
+    #   :time,
+    # ])
+
+    # handler.assert_attributes_assigned(written_message)
+
+    # handler.assert_follows(written_message)
+
+    written_message.assert_attributes_copied([
       :example_id,
       { :quantity => :amount },
       :time,
     ])
-
-    handler.assert_attributes_assigned(written_message)
-
-    handler.assert_follows(written_message)
   end
 end

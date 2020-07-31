@@ -70,18 +70,6 @@ module Messaging
         fixture.message
       end
 
-      def assert_attributes_copied(output_message, attribute_names=nil)
-        fixture(
-          Schema::Fixtures::Equality,
-          input_message,
-          output_message,
-          attribute_names,
-          ignore_class: true,
-          print_title_context: false,
-          attributes_context_name: "Attributes Copied: #{input_message.class.message_type} => #{output_message.class.message_type}"
-        )
-      end
-
       def assert_attributes_assigned(output_message, attribute_names=nil)
         fixture(
           Schema::Fixtures::Assignment,
