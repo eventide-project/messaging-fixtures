@@ -67,7 +67,10 @@ module Messaging
 
       def assert_written(message_class, &action)
         fixture = fixture(Write, handler.write, message_class, &action)
-        fixture.message
+
+        output_message = fixture.message
+
+        TestBench::Fixture.build(WrittenMessage, output_message, input_message, session: test_session)
       end
     end
   end

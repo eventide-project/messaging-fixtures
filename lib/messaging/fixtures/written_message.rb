@@ -22,8 +22,6 @@ module Messaging
             action.call(self)
           end
         end
-
-        message
       end
 
       def assert_attributes_copied(attribute_names=nil)
