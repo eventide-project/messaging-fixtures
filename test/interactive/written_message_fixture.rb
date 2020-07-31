@@ -12,7 +12,7 @@ context "Written Message Fixture" do
   message_class = message.class
 
   fixture(
-    WrittenMessage,
+    Write,
     writer,
     message.class
   ) do |written_message|

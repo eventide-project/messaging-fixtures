@@ -66,7 +66,7 @@ module Messaging
       end
 
       def assert_written(message_class, &action)
-        fixture = fixture(WrittenMessage, handler.write, message_class, &action)
+        fixture = fixture(Write, handler.write, message_class, &action)
         fixture.message
       end
 

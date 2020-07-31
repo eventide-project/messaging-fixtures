@@ -19,7 +19,7 @@ context "Handler Fixture" do
         end
 
         test "WrittenMessage fixture" do
-          assert(parameter.is_a?(WrittenMessage))
+          assert(parameter.is_a?(Write))
         end
       end
     end
