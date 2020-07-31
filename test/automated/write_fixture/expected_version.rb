@@ -1,15 +1,15 @@
 require_relative '../automated_init'
 
-context "Written Message" do
+context "Write Fixture" do
   context "Assert Expected Version" do
-    context "Written" do
+    context "Write" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
 
       writer.(message, stream_name, expected_version: 11)
 
-      fixture = WrittenMessage.build(writer, message.class)
+      fixture = Write.build(writer, message.class)
 
       fixture.assert_expected_version(11)
 
@@ -27,7 +27,7 @@ context "Written Message" do
 
       writer.(message, stream_name, expected_version: 111)
 
-      fixture = WrittenMessage.build(writer, message.class)
+      fixture = Write.build(writer, message.class)
 
       fixture.assert_expected_version(11)
 

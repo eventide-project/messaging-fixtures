@@ -1,10 +1,10 @@
 require_relative '../../../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Setup" do
     context "Stored Entity" do
       context "Specified" do
-        context "No Entity Version" do
+        context "Entity Version is Specified" do
           input_message = Controls::Message.example
 
           entity = Controls::Entity::Identified.example
@@ -14,7 +14,8 @@ context "Handler" do
           fixture = Handler.build(
             handler,
             input_message,
-            entity
+            entity,
+            11
           )
 
           store = handler.store
@@ -28,7 +29,7 @@ context "Handler" do
           end
 
           test "Entity version is the cache record's default version" do
-            assert(version == 0)
+            assert(version == 11)
           end
         end
       end

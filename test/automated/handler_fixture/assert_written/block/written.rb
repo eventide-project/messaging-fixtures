@@ -1,9 +1,9 @@
 require_relative '../../../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Assert Written" do
     context "Block" do
-      context "Block Parameter" do
+      context "Message Is Written" do
         handler = Controls::Handler.example
         message = Controls::Message.example
 
@@ -13,13 +13,13 @@ context "Handler" do
 
         fixture.()
 
-        parameter = nil
-        fixture.assert_written(output_message_class) do |f|
-          parameter = f
+        effect = nil
+        fixture.assert_written(output_message_class) do
+          effect = :_
         end
 
-        test "WrittenMessage fixture" do
-          assert(parameter.is_a?(WrittenMessage))
+        test "Block is executed" do
+          refute(effect.nil?)
         end
       end
     end

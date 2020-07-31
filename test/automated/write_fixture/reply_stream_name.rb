@@ -1,6 +1,6 @@
 require_relative '../automated_init'
 
-context "Written Message" do
+context "Write Fixture" do
   context "Assert Reply Stream Name" do
     context "Written" do
       writer = Messaging::Write::Substitute.build
@@ -10,7 +10,7 @@ context "Written Message" do
 
       writer.(message, stream_name, reply_stream_name: reply_stream_name)
 
-      fixture = WrittenMessage.build(writer, message.class)
+      fixture = Write.build(writer, message.class)
 
       fixture.assert_reply_stream_name(reply_stream_name)
 
@@ -29,7 +29,7 @@ context "Written Message" do
 
       writer.(message, stream_name, reply_stream_name: SecureRandom.hex)
 
-      fixture = WrittenMessage.build(writer, message.class)
+      fixture = Write.build(writer, message.class)
 
       fixture.assert_reply_stream_name(reply_stream_name)
 
