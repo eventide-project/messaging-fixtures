@@ -70,16 +70,6 @@ module Messaging
         fixture.message
       end
 
-      def assert_attributes_assigned(output_message, attribute_names=nil)
-        fixture(
-          Schema::Fixtures::Assignment,
-          output_message,
-          attribute_names,
-          print_title_context: false,
-          attributes_context_name: "Attributes Assigned: #{output_message.class.message_type}"
-        )
-      end
-
       def assert_follows(output_message)
         test "Follows: #{input_message.class.message_type}, #{output_message.class.message_type}" do
           detail "Input Stream Name: #{input_message.metadata.stream_name.inspect}"

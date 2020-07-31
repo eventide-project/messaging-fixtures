@@ -12,7 +12,7 @@ context "Handler Fixture" do
       :time,
     ]
 
-    output_message = output_message_class.follow(input_message, copy: attribute_names)
+    output_message = output_message_class.copy(input_message, copy: attribute_names)
 
     fixture = WrittenMessage.build(output_message, input_message)
 

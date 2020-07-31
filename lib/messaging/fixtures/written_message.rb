@@ -38,6 +38,15 @@ module Messaging
         )
       end
 
+      def assert_attributes_assigned(attribute_names=nil)
+        fixture(
+          Schema::Fixtures::Assignment,
+          output_message,
+          attribute_names,
+          print_title_context: false,
+          attributes_context_name: "Attributes Assigned: #{output_message.class.message_type}"
+        )
+      end
     end
   end
 end

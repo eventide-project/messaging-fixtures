@@ -3,28 +3,14 @@ require_relative '../automated_init'
 context "Handler Fixture" do
   context "Assert Attributes Assigned" do
     input_message = Controls::Message.example
-    output_message_class = Controls::Event::Output
 
-    attribute_names = [
-      :example_id,
-      { :quantity => :amount },
-      :time,
-    ]
-
-    output_message = output_message_class.follow(input_message, copy: attribute_names)
+    output_message = Controls::Event.example
+    output_message_class = output_message.class
 
     fixture = WrittenMessage.build(output_message, input_message)
 
-    ## test this to verify output
-    # fixture.()
-
+    attribute_names = output_message_class.attribute_names
     fixture.assert_attributes_assigned(attribute_names)
-
-    # attribute_names = output_message_class.attribute_names
-
-    # output_message = fixture.assert_written(output_message_class)
-
-    fixture.assert_attributes_copied(output_message, attribute_names)
 
     context_text = 'Attributes Assigned: Output'
 
