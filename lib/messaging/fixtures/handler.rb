@@ -65,7 +65,7 @@ module Messaging
         end
       end
 
-      def assert_written(message_class, &action)
+      def assert_write(message_class, &action)
         fixture = fixture(Write, handler.write, message_class, &action)
 
         output_message = fixture.message

@@ -1,7 +1,7 @@
 require_relative '../../../automated_init'
 
 context "Handler Fixture" do
-  context "Assert Written" do
+  context "Assert Write" do
     context "Block" do
       context "Message Is Written" do
         handler = Controls::Handler.example
@@ -14,7 +14,7 @@ context "Handler Fixture" do
         fixture.()
 
         effect = nil
-        fixture.assert_written(output_message_class) do
+        fixture.assert_write(output_message_class) do
           effect = :_
         end
 

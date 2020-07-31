@@ -18,7 +18,7 @@ context "Handler Fixture" do
     entity_version
   ) do |handler|
 
-    written_message = handler.assert_written(output_message_class) do |f|
+    written_message = handler.assert_write(output_message_class) do |f|
       f.assert_stream_name(output_stream_name)
       f.assert_expected_version(entity_version)
     end
