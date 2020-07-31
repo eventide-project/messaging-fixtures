@@ -1,15 +1,13 @@
 require_relative '../../../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Assert Written" do
     context "Block" do
-      context "Message Is Not Written" do
+      context "Message Is Written" do
         handler = Controls::Handler.example
         message = Controls::Message.example
 
-        output_message_class = Class.new do
-          include Messaging::Message
-        end
+        output_message_class = Controls::Event::Output
 
         fixture = Handler.build(handler, message)
 
@@ -20,8 +18,8 @@ context "Handler" do
           effect = :_
         end
 
-        test "Block is not executed" do
-          assert(effect.nil?)
+        test "Block is executed" do
+          refute(effect.nil?)
         end
       end
     end

@@ -66,48 +66,11 @@ module Messaging
       end
 
       def assert_written(message_class, &action)
-        fixture = fixture(WrittenMessage, handler.write, message_class, &action)
-        fixture.message
-      end
+        fixture = fixture(Write, handler.write, message_class, &action)
 
-      def assert_attributes_copied(output_message, attribute_names=nil)
-        fixture(
-          Schema::Fixtures::Equality,
-          input_message,
-          output_message,
-          attribute_names,
-          ignore_class: true,
-          print_title_context: false,
-          attributes_context_name: "Attributes Copied: #{input_message.class.message_type} => #{output_message.class.message_type}"
-        )
-      end
+        output_message = fixture.message
 
-      def assert_attributes_assigned(output_message, attribute_names=nil)
-        fixture(
-          Schema::Fixtures::Assignment,
-          output_message,
-          attribute_names,
-          print_title_context: false,
-          attributes_context_name: "Attributes Assigned: #{output_message.class.message_type}"
-        )
-      end
-
-      def assert_follows(output_message)
-        test "Follows: #{input_message.class.message_type}, #{output_message.class.message_type}" do
-          detail "Input Stream Name: #{input_message.metadata.stream_name.inspect}"
-          detail "Output Causation Stream Name: #{output_message.metadata.causation_message_stream_name.inspect}"
-
-          detail "Input Position: #{input_message.metadata.position.inspect}"
-          detail "Output Causation Position: #{output_message.metadata.causation_message_position.inspect}"
-
-          detail "Input Global Position: #{input_message.metadata.global_position.inspect}"
-          detail "Output Causation Global Position: #{output_message.metadata.causation_message_global_position.inspect}"
-
-          detail "Input Reply Stream Name: #{input_message.metadata.reply_stream_name.inspect}"
-          detail "Output Reply Stream Name: #{output_message.metadata.reply_stream_name.inspect}"
-
-          assert(output_message.follows?(input_message))
-        end
+        TestBench::Fixture.build(WrittenMessage, output_message, input_message, session: test_session)
       end
     end
   end

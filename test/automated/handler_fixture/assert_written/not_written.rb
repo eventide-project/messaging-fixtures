@@ -1,13 +1,15 @@
 require_relative '../../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Assert Written" do
     handler = Controls::Handler.example
     message = Controls::Message.example
 
-    output_message_class = Controls::Event::Output
+    output_message_class = Class.new do
+      include Messaging::Message
+    end
 
-    context "Message Is Written" do
+    context "Message Is Not Written" do
       fixture = Handler.build(handler, message)
 
       fixture.()
@@ -16,8 +18,8 @@ context "Handler" do
 
       passed = fixture.test_session.test_passed?('Written')
 
-      test "Passed" do
-        assert(passed)
+      test "Not Passed" do
+        refute(passed)
       end
     end
   end

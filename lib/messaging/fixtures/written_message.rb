@@ -6,82 +6,61 @@ module Messaging
       include TestBench::Fixture
       include Initializer
 
-      initializer :message, :stream_name, :expected_version, :reply_stream_name, :action
+      initializer :output_message, :input_message, :action
 
-      def self.build(writer, message_class, &action)
-        data = get_data(writer, message_class)
-
-        message = data&.message
-        stream_name = data&.stream_name
-        expected_version = data&.expected_version
-        reply_stream_name = data&.reply_stream_name
-
-        new(message, stream_name, expected_version, reply_stream_name, action)
-      end
-
-      def self.get_data(writer, message_class)
-        sink = writer.sink
-
-        records = sink.written_records.select do |record|
-          record.data.message.class == message_class
-        end
-
-        if records.length > 1
-          raise Error, "More than one message written (Message Class: #{message_class})"
-        end
-
-        if records.empty?
-          return nil
-        end
-
-        records.first.data
+      def self.build(output_message, input_message, &action)
+        new(output_message, input_message, action)
       end
 
       def call
-        message_class = message&.class
+        message_class = output_message.class
 
-        context "Written Message: #{message_class&.message_type || 'nil'}" do
-          written = !message.nil?
-
-          test "Written" do
-            detail "Message Class: #{message_class.inspect}"
-            assert(written)
-          end
-
-          return if !written || action.nil?
+        context "Written Message: #{message_class.message_type}" do
+          detail "Message Class: #{message_class.name}"
 
           if not action.nil?
             action.call(self)
           end
         end
-
-        message
       end
 
-      def assert_stream_name(stream_name)
-        test "Stream name" do
-          detail "Stream Name: #{stream_name}"
-          detail "Written Stream Name: #{self.stream_name}"
-
-          assert(stream_name == self.stream_name)
-        end
+      def assert_attributes_copied(attribute_names=nil)
+        fixture(
+          Schema::Fixtures::Equality,
+          input_message,
+          output_message,
+          attribute_names,
+          ignore_class: true,
+          print_title_context: false,
+          attributes_context_name: "Attributes Copied: #{input_message.class.message_type} => #{output_message.class.message_type}"
+        )
       end
 
-      def assert_expected_version(expected_version)
-        test "Expected version" do
-          detail "Expected Version: #{expected_version}"
-          detail "Written Expected Version: #{self.expected_version}"
-
-          assert(expected_version == self.expected_version)
-        end
+      def assert_attributes_assigned(attribute_names=nil)
+        fixture(
+          Schema::Fixtures::Assignment,
+          output_message,
+          attribute_names,
+          print_title_context: false,
+          attributes_context_name: "Attributes Assigned: #{output_message.class.message_type}"
+        )
       end
 
-      def assert_reply_stream_name(reply_stream_name)
-        test "Reply stream name" do
-          detail "Reply stream Name: #{reply_stream_name}"
-          detail "Written reply stream Name: #{self.reply_stream_name}"
+      def assert_follows
+        test "Follows: #{input_message.class.message_type}, #{output_message.class.message_type}" do
+          detail "Input Stream Name: #{input_message.metadata.stream_name.inspect}"
+          detail "Output Causation Stream Name: #{output_message.metadata.causation_message_stream_name.inspect}"
 
-          assert(reply_stream_name == self.reply_stream_name)
+          detail "Input Position: #{input_message.metadata.position.inspect}"
+          detail "Output Causation Position: #{output_message.metadata.causation_message_position.inspect}"
+
+          detail "Input Global Position: #{input_message.metadata.global_position.inspect}"
+          detail "Output Causation Global Position: #{output_message.metadata.causation_message_global_position.inspect}"
+
+          detail "Input Reply Stream Name: #{input_message.metadata.reply_stream_name.inspect}"
+          detail "Output Reply Stream Name: #{output_message.metadata.reply_stream_name.inspect}"
+
+          assert(output_message.follows?(input_message))
         end
       end
     end

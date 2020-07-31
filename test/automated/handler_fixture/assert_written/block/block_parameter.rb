@@ -1,6 +1,6 @@
 require_relative '../../../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Assert Written" do
     context "Block" do
       context "Block Parameter" do
@@ -19,7 +19,7 @@ context "Handler" do
         end
 
         test "WrittenMessage fixture" do
-          assert(parameter.is_a?(WrittenMessage))
+          assert(parameter.is_a?(Write))
         end
       end
     end

@@ -1,6 +1,6 @@
 require_relative '../../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Assert Written" do
     context "Output Message" do
       handler = Controls::Handler.example

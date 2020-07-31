@@ -1,25 +1,22 @@
 require_relative '../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Assert Attributes Copied" do
-    handler = Controls::Handler.example
-    message = Controls::Message.example
+    input_message = Controls::Message.example
 
     output_message_class = Controls::Event::Output
 
-    fixture = Handler.build(handler, message)
-
-    copied_attribute_names = [
+    attribute_names = [
       :example_id,
       { :quantity => :amount },
       :time,
     ]
 
-    fixture.()
+    output_message = output_message_class.copy(input_message, copy: attribute_names)
 
-    output_message = fixture.assert_written(output_message_class)
+    fixture = WrittenMessage.build(output_message, input_message)
 
-    fixture.assert_attributes_copied(output_message, copied_attribute_names)
+    fixture.assert_attributes_copied(attribute_names)
 
     context_text = 'Attributes Copied: Input => Output'
 

@@ -1,21 +1,16 @@
 require_relative '../automated_init'
 
-context "Handler" do
+context "Handler Fixture" do
   context "Assert Attributes Assigned" do
-    handler = Controls::Handler.example
-    message = Controls::Message.example
+    input_message = Controls::Message.example
 
-    output_message_class = Controls::Event::Output
+    output_message = Controls::Event.example
+    output_message_class = output_message.class
 
-    fixture = Handler.build(handler, message)
+    fixture = WrittenMessage.build(output_message, input_message)
 
     attribute_names = output_message_class.attribute_names
-
-    fixture.()
-
-    output_message = fixture.assert_written(output_message_class)
-
-    fixture.assert_attributes_assigned(output_message, attribute_names)
+    fixture.assert_attributes_assigned(attribute_names)
 
     context_text = 'Attributes Assigned: Output'
 

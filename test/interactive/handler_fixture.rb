@@ -18,22 +18,19 @@ context "Handler Fixture" do
     entity_version
   ) do |handler|
 
-  ## This written_message return should be a fixture that has
-  ## the output message AND the input message
-  ## All the subsequent asserts can be called against it
     written_message = handler.assert_written(output_message_class) do |f|
       f.assert_stream_name(output_stream_name)
       f.assert_expected_version(entity_version)
     end
 
-    handler.assert_attributes_copied(written_message, [
+    written_message.assert_follows
+
+    written_message.assert_attributes_copied([
       :example_id,
       { :quantity => :amount },
       :time,
     ])
 
-    handler.assert_attributes_assigned(written_message)
-
-    handler.assert_follows(written_message)
+    written_message.assert_attributes_assigned
   end
 end
