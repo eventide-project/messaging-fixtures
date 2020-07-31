@@ -1,6 +1,6 @@
 require_relative 'interactive_init'
 
-context "Written Message Fixture" do
+context "Write Fixture" do
   writer = Messaging::Write::Substitute.build
   message = Controls::Event.example
   stream_name = "example-#{message.example_id}"

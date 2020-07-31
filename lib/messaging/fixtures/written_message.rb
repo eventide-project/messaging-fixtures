@@ -47,6 +47,24 @@ module Messaging
           attributes_context_name: "Attributes Assigned: #{output_message.class.message_type}"
         )
       end
+
+      def assert_follows
+        test "Follows: #{input_message.class.message_type}, #{output_message.class.message_type}" do
+          detail "Input Stream Name: #{input_message.metadata.stream_name.inspect}"
+          detail "Output Causation Stream Name: #{output_message.metadata.causation_message_stream_name.inspect}"
+
+          detail "Input Position: #{input_message.metadata.position.inspect}"
+          detail "Output Causation Position: #{output_message.metadata.causation_message_position.inspect}"
+
+          detail "Input Global Position: #{input_message.metadata.global_position.inspect}"
+          detail "Output Causation Global Position: #{output_message.metadata.causation_message_global_position.inspect}"
+
+          detail "Input Reply Stream Name: #{input_message.metadata.reply_stream_name.inspect}"
+          detail "Output Reply Stream Name: #{output_message.metadata.reply_stream_name.inspect}"
+
+          assert(output_message.follows?(input_message))
+        end
+      end
     end
   end
 end

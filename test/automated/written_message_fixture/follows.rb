@@ -2,19 +2,22 @@ require_relative '../automated_init'
 
 context "Handler Fixture" do
   context "Assert Follows" do
-    message = Controls::Message.example
+    input_message = Controls::Message.example
+
     output_message_class = Controls::Event::Output
 
+    attribute_names = [
+      :example_id,
+      { :quantity => :amount },
+      :time,
+    ]
+
     context "Follows" do
-      handler = Controls::Handler.example
+      output_message = output_message_class.follow(input_message, copy: attribute_names)
 
-      fixture = Handler.build(handler, message)
+      fixture = WrittenMessage.build(output_message, input_message)
 
-      fixture.()
-
-      output_message = fixture.assert_written(output_message_class)
-
-      fixture.assert_follows(output_message)
+      fixture.assert_follows
 
       passed = fixture.test_session.test?('Follows: Input, Output')
 
@@ -24,17 +27,13 @@ context "Handler Fixture" do
     end
 
     context "Doesn't Follow" do
-      handler = Controls::Handler.example
+      output_message = output_message_class.follow(input_message, copy: attribute_names)
 
-      fixture = Handler.build(handler, message)
-
-      fixture.()
-
-      output_message = fixture.assert_written(output_message_class)
+      fixture = WrittenMessage.build(output_message, input_message)
 
       output_message.metadata.causation_message_stream_name = SecureRandom.hex
 
-      fixture.assert_follows(output_message)
+      fixture.assert_follows
 
       passed = fixture.test_session.test_passed?('Follows: Input, Output')
 
