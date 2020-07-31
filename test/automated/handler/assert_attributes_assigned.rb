@@ -1,7 +1,7 @@
 require_relative '../automated_init'
 
 context "Handler" do
-  context "Assert Attributes Assigned" do
+  context "Assert Attributes Copied" do
     handler = Controls::Handler.example
     message = Controls::Message.example
 
@@ -9,15 +9,19 @@ context "Handler" do
 
     fixture = Handler.build(handler, message)
 
-    attribute_names = output_message_class.attribute_names
+    copied_attribute_names = [
+      :example_id,
+      { :quantity => :amount },
+      :time,
+    ]
 
     fixture.()
 
     output_message = fixture.assert_written(output_message_class)
 
-    fixture.assert_attributes_assigned(output_message, attribute_names)
+    fixture.assert_attributes_copied(output_message, copied_attribute_names)
 
-    context_text = 'Attributes Assigned: Output'
+    context_text = 'Attributes Copied: Input => Output'
 
     context "Context: \"#{context_text}\"" do
       printed = fixture.test_session.context?(context_text)
@@ -37,8 +41,8 @@ context "Handler" do
       end
     end
 
-    context "amount" do
-      passed = attribute_context.test?('amount')
+    context "quantity => amount" do
+      passed = attribute_context.test?('quantity => amount')
 
       test "Passed" do
         assert(passed)
@@ -47,22 +51,6 @@ context "Handler" do
 
     context "time" do
       passed = attribute_context.test?('time')
-
-      test "Passed" do
-        assert(passed)
-      end
-    end
-
-    context "processed_time" do
-      passed = attribute_context.test?('processed_time')
-
-      test "Passed" do
-        assert(passed)
-      end
-    end
-
-    context "sequence" do
-      passed = attribute_context.test?('sequence')
 
       test "Passed" do
         assert(passed)
