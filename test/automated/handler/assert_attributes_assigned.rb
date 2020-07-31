@@ -34,7 +34,7 @@ context "Handler" do
     attribute_context = fixture.test_session[context_text]
 
     context "example_id" do
-      passed = attribute_context.test?('example_id')
+      passed = attribute_context.test_passed?('example_id')
 
       test "Passed" do
         assert(passed)
@@ -42,7 +42,7 @@ context "Handler" do
     end
 
     context "quantity => amount" do
-      passed = attribute_context.test?('quantity => amount')
+      passed = attribute_context.test_passed?('quantity => amount')
 
       test "Passed" do
         assert(passed)
@@ -50,7 +50,7 @@ context "Handler" do
     end
 
     context "time" do
-      passed = attribute_context.test?('time')
+      passed = attribute_context.test_passed?('time')
 
       test "Passed" do
         assert(passed)
