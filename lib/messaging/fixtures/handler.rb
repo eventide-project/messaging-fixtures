@@ -72,6 +72,19 @@ module Messaging
 
         TestBench::Fixture.build(WrittenMessage, output_message, input_message, session: test_session)
       end
+
+      def refute_write(message_class)
+        write_telemetry_data = Write.get_data(handler.write, message_class)
+
+        not_written = write_telemetry_data.nil?
+
+        context "No Write: #{message_class.message_type}" do
+          detail "Message Class: #{message_class.inspect}"
+          test "Not written" do
+            assert(not_written)
+          end
+        end
+      end
     end
   end
 end

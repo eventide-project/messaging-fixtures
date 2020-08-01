@@ -10,6 +10,8 @@ context "Handler Fixture" do
   output_message_class = Controls::Event::Output
   output_stream_name = "example-#{entity.id}"
 
+  alternate_output_message_class = Controls::Event::AlternateOutput
+
   fixture(
     Handler,
     handler,
@@ -35,5 +37,7 @@ context "Handler Fixture" do
 
       f.assert_attributes_assigned
     end
+
+    handler.refute_write(alternate_output_message_class)
   end
 end
