@@ -86,13 +86,8 @@ module Messaging
         end
       end
 
-      def assert_input_message(attribute_names=nil)
-        fixture(
-          Schema::Fixtures::Assignment,
-          input_message,
-          attribute_names,
-          title_context_name: "Input Message: #{input_message.class.message_type}"
-        )
+      def assert_input_message(attributes=nil, &action)
+        fixture = fixture(InputMessage, input_message, &action)
       end
     end
   end
