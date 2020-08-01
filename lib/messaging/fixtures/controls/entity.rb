@@ -6,10 +6,10 @@ module Messaging
           include Schema::DataStructure
 
           attribute :id, String
-          attribute :some_condition, Boolean, default: false
+          attribute :alternate_condition, Boolean, default: false
           attribute :sequence, Integer
 
-          alias :some_condition? :some_condition
+          alias :alternate_condition? :alternate_condition
 
           def processed?(message_sequence)
             return false if sequence.nil?

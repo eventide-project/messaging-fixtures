@@ -43,7 +43,7 @@ module Messaging
               :time,
             ]
 
-            if example.some_condition?
+            if example.alternate_condition?
               alternate_output = Controls::Event::AlternateOutput.follow(input, copy: attributes)
               alternate_output.processed_time = time
               alternate_output.sequence = sequence

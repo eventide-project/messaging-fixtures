@@ -16,7 +16,7 @@ context "Handle" do
       entity = Controls::Entity::Identified.example
       detail "Entity Class: #{entity.class.name}"
 
-      refute(entity.some_condition?)
+      refute(entity.alternate_condition?)
 
       sequence = input.metadata.global_position
 
