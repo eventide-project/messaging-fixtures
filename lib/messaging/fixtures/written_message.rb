@@ -6,17 +6,19 @@ module Messaging
       include TestBench::Fixture
       include Initializer
 
-      initializer :output_message, :input_message, :action
+      initializer :output_message, :input_message
 
-      def self.build(output_message, input_message, &action)
-        new(output_message, input_message, action)
+      def self.build(output_message, input_message)
+        new(output_message, input_message)
       end
 
-      def call
-        message_class = output_message.class
+      def call(&action)
+        input_message_class = input_message.class
+        output_message_class = output_message.class
 
-        context "Written Message: #{message_class.message_type}" do
-          detail "Message Class: #{message_class.name}"
+        context "Written Message: #{output_message_class.message_type}" do
+          detail "Input Message Class: #{input_message_class.name}"
+          detail "Written Message Class: #{output_message_class.name}"
 
           if not action.nil?
             action.call(self)
@@ -47,18 +49,21 @@ module Messaging
       end
 
       def assert_follows
-        test "Follows: #{input_message.class.message_type}, #{output_message.class.message_type}" do
-          detail "Input Stream Name: #{input_message.metadata.stream_name.inspect}"
-          detail "Output Causation Stream Name: #{output_message.metadata.causation_message_stream_name.inspect}"
+        input_message_type = input_message.class.message_type
+        output_message_type = output_message.class.message_type
 
-          detail "Input Position: #{input_message.metadata.position.inspect}"
-          detail "Output Causation Position: #{output_message.metadata.causation_message_position.inspect}"
+        test "Follows: #{input_message_type}, #{output_message_type}" do
+          detail "#{input_message_type} Stream Name: #{input_message.metadata.stream_name.inspect}"
+          detail "#{output_message_type} Causation Stream Name: #{output_message.metadata.causation_message_stream_name.inspect}"
 
-          detail "Input Global Position: #{input_message.metadata.global_position.inspect}"
-          detail "Output Causation Global Position: #{output_message.metadata.causation_message_global_position.inspect}"
+          detail "#{input_message_type} Position: #{input_message.metadata.position.inspect}"
+          detail "#{output_message_type} Causation Position: #{output_message.metadata.causation_message_position.inspect}"
 
-          detail "Input Reply Stream Name: #{input_message.metadata.reply_stream_name.inspect}"
-          detail "Output Reply Stream Name: #{output_message.metadata.reply_stream_name.inspect}"
+          detail "#{input_message_type} Global Position: #{input_message.metadata.global_position.inspect}"
+          detail "#{output_message_type} Causation Global Position: #{output_message.metadata.causation_message_global_position.inspect}"
+
+          detail "#{input_message_type} Reply Stream Name: #{input_message.metadata.reply_stream_name.inspect}"
+          detail "#{output_message_type} Reply Stream Name: #{output_message.metadata.reply_stream_name.inspect}"
 
           assert(output_message.follows?(input_message))
         end

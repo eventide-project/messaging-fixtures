@@ -23,14 +23,17 @@ context "Handler Fixture" do
       f.assert_expected_version(entity_version)
     end
 
-    written_message.assert_follows
+    written_message.() do |f|
 
-    written_message.assert_attributes_copied([
-      :example_id,
-      { :quantity => :amount },
-      :time,
-    ])
+      f.assert_follows
 
-    written_message.assert_attributes_assigned
+      f.assert_attributes_copied([
+        :example_id,
+        { :quantity => :amount },
+        :time,
+      ])
+
+      f.assert_attributes_assigned
+    end
   end
 end
