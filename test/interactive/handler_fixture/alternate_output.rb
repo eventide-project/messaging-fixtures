@@ -1,17 +1,19 @@
 require_relative '../interactive_init'
 
 context "Handler Fixture" do
-  context "Output" do
+  context "Alternate Output" do
     handler = Controls::Handler.example
     message = Controls::Message.example
     entity = Controls::Entity::Identified.example
 
+    entity.alternate_condition = true
+
     entity_version = 11
 
-    output_message_class = Controls::Event::Output
+    output_message_class = Controls::Event::AlternateOutput
     output_stream_name = "example-#{entity.id}"
 
-    alternate_output_message_class = Controls::Event::AlternateOutput
+    alternate_output_message_class = Controls::Event::Output
 
     fixture(
       Handler,
