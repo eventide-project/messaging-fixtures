@@ -19,7 +19,7 @@ context "Handler Fixture" do
 
       fixture.assert_follows
 
-      passed = fixture.test_session.test?('Follows: Input, Output')
+      passed = fixture.test_session.test?('Follows: Input')
 
       test "Passed" do
         assert(passed)

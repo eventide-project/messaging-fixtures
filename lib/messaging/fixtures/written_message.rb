@@ -30,7 +30,7 @@ module Messaging
         input_message_type = input_message.class.message_type
         output_message_type = output_message.class.message_type
 
-        test "Follows: #{input_message_type}, #{output_message_type}" do
+        test "Follows: #{input_message_type}" do
           detail "#{input_message_type} Stream Name: #{input_message.metadata.stream_name.inspect}"
           detail "#{output_message_type} Causation Stream Name: #{output_message.metadata.causation_message_stream_name.inspect}"
 
