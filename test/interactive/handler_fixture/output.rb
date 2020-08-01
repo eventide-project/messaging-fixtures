@@ -1,4 +1,4 @@
-require_relative 'interactive_init'
+require_relative '../interactive_init'
 
 context "Handler Fixture" do
   handler = Controls::Handler.example
