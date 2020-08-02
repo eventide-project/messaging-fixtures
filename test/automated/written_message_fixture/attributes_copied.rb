@@ -1,6 +1,6 @@
 require_relative '../automated_init'
 
-context "Handler Fixture" do
+context "Written Message Fixture" do
   context "Assert Attributes Copied" do
     input_message = Controls::Message.example
 

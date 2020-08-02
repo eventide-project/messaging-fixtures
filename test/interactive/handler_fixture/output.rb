@@ -21,7 +21,10 @@ context "Handler Fixture" do
       entity_version
     ) do |handler|
 
-      handler.assert_input_message
+      handler.assert_input_message do |f|
+        f.assert_attributes_assigned
+        f.assert_metadata_attributes_assigned
+      end
 
       written_message = handler.assert_write(output_message_class) do |f|
         f.assert_stream_name(output_stream_name)

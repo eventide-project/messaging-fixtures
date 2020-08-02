@@ -1,18 +1,16 @@
 require_relative '../automated_init'
 
-context "Written Message Fixture" do
+context "Input Message Fixture" do
   context "Assert Attributes Assigned" do
     input_message = Controls::Message.example
 
-    output_message = Controls::Event.example
-    output_message_class = output_message.class
+    fixture = InputMessage.build(input_message)
 
-    fixture = WrittenMessage.build(output_message, input_message)
+    attribute_names = input_message.class.attribute_names
 
-    attribute_names = output_message_class.attribute_names
     fixture.assert_attributes_assigned(attribute_names)
 
-    context_text = 'Attributes Assigned: Output'
+    context_text = 'Attributes Assigned'
 
     context "Context: \"#{context_text}\"" do
       printed = fixture.test_session.context?(context_text)
@@ -32,8 +30,8 @@ context "Written Message Fixture" do
       end
     end
 
-    context "amount" do
-      passed = attribute_context.test_passed?('amount')
+    context "quantity" do
+      passed = attribute_context.test_passed?('quantity')
 
       test "Passed" do
         assert(passed)
@@ -42,22 +40,6 @@ context "Written Message Fixture" do
 
     context "time" do
       passed = attribute_context.test_passed?('time')
-
-      test "Passed" do
-        assert(passed)
-      end
-    end
-
-    context "processed_time" do
-      passed = attribute_context.test_passed?('processed_time')
-
-      test "Passed" do
-        assert(passed)
-      end
-    end
-
-    context "sequence" do
-      passed = attribute_context.test_passed?('sequence')
 
       test "Passed" do
         assert(passed)
