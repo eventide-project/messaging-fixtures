@@ -5,11 +5,11 @@ context "Handler Fixture" do
     handler = Controls::Handler.example
     message = Controls::Message.example
 
-    sequence = message.metadata.global_position
-
     entity = Controls::Entity::Identified.example
     entity.alternate_condition = true
-    # entity.sequence = sequence
+
+    message_sequence = message.metadata.global_position
+    entity.sequence = message_sequence - 1
 
     entity_version = 11
 

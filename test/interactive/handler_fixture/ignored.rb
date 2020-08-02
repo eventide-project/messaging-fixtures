@@ -30,8 +30,8 @@ context "Handler Fixture" do
       # handler.refute_write(output_message_class)
       # handler.refute_write(alternate_output_message_class)
 
-      handler.refute_write
-      handler.refute_write(stream_name: output_stream_name)
+      # handler.refute_write
+      # handler.refute_write(stream_name: output_stream_name)
     end
   end
 end
