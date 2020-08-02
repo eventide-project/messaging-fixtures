@@ -4,7 +4,11 @@ context "Handler Fixture" do
   context "Output" do
     handler = Controls::Handler.example
     message = Controls::Message.example
+
+    sequence = message.metadata.global_position
+
     entity = Controls::Entity::Identified.example
+    # entity.sequence = sequence
 
     entity_version = 11
 
