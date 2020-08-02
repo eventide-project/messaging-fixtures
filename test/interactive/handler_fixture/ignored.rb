@@ -5,13 +5,10 @@ context "Handler Fixture" do
     handler = Controls::Handler.example
     message = Controls::Message.example
 
-    sequence = message.metadata.global_position
+    message_sequence = message.metadata.global_position
 
     entity = Controls::Entity::Identified.example
-    entity.sequence = sequence
-
-    output_message_class = Controls::Event::Output
-    alternate_output_message_class = Controls::Event::AlternateOutput
+    entity.sequence = message_sequence
 
     output_stream_name = "example-#{entity.id}"
 
@@ -27,11 +24,7 @@ context "Handler Fixture" do
         f.assert_metadata_attributes_assigned
       end
 
-      # handler.refute_write(output_message_class)
-      # handler.refute_write(alternate_output_message_class)
-
-      # handler.refute_write
-      # handler.refute_write(stream_name: output_stream_name)
+      handler.refute_write
     end
   end
 end

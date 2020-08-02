@@ -52,7 +52,7 @@ module Messaging
           detail "Handler Class: #{handler.class.name}"
 
           detail "Entity Class: #{entity.class.name}"
-          detail "Entity Data: #{entity.attributes}"
+          detail "Entity Data: #{entity&.attributes}"
 
           handler.(input_message)
 
@@ -74,15 +74,22 @@ module Messaging
         end
       end
 
-      def refute_write(message_class)
-        write_telemetry_data = Write.get_data(handler.write, message_class)
+      def refute_write(message_class=nil)
+        writer = handler.write
 
-        not_written = write_telemetry_data.nil?
+        context_title = "No Write"
+        if not message_class.nil?
+          write_telemetry_data = Write.get_data(writer, message_class)
+          written = !write_telemetry_data.nil?
+          context_title = "#{context_title}: #{message_class.message_type}"
+        else
+          written = writer.written?
+        end
 
-        context "No Write: #{message_class.message_type}" do
+        context context_title do
           detail "Message Class: #{message_class.inspect}"
           test "Not written" do
-            assert(not_written)
+            refute(written)
           end
         end
       end
