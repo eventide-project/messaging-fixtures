@@ -52,10 +52,7 @@ module Messaging
           detail "Handler Class: #{handler.class.name}"
 
           detail "Entity Class: #{entity.class.name}"
-          ## Problem: entity might not have sequence
-          ## Maybe don't print this
-          ## Could be something that a user puts in their own test code
-          detail "Entity Sequence: #{entity_sequence.inspect}"
+          detail "Entity Data: #{entity.attributes}"
 
           handler.(input_message)
 
