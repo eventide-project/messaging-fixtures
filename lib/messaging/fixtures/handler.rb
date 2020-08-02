@@ -67,7 +67,11 @@ module Messaging
 
         output_message = fixture.message
 
-        TestBench::Fixture.build(WrittenMessage, output_message, input_message, session: test_session)
+        if not output_message.nil?
+          TestBench::Fixture.build(WrittenMessage, output_message, input_message, session: test_session)
+        else
+          Mimic.(WrittenMessage)
+        end
       end
 
       def refute_write(message_class)

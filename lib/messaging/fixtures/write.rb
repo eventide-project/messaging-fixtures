@@ -41,10 +41,11 @@ module Messaging
         message_class = message&.class
 
         context "Write: #{message_class&.message_type || 'nil'}" do
+          detail "Message Class: #{message_class.inspect}"
+
           written = !message.nil?
 
           test "Written" do
-            detail "Message Class: #{message_class.inspect}"
             assert(written)
           end
 
