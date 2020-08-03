@@ -65,13 +65,15 @@ module Messaging
       def assert_write(message_class, &action)
         fixture = fixture(Write, handler.write, message_class, &action)
 
-        output_message = fixture.message
+        written_message = fixture.message
+      end
 
-        if not output_message.nil?
-          TestBench::Fixture.build(WrittenMessage, output_message, input_message, session: test_session)
-        else
-          Mimic.(WrittenMessage)
+      def assert_written_message(written_message, &action)
+        if written_message.nil?
+          action = nil
         end
+
+        fixture(WrittenMessage, written_message, input_message, &action)
       end
 
       def refute_write(message_class=nil)
