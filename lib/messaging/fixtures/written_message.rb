@@ -17,11 +17,18 @@ module Messaging
         output_message_class = output_message.class
 
         if output_message.nil?
-          test "Written Message" do
-            detail "Written message: #{output_message.inspect}"
-            assert(false)
+          context "Written Message" do
+            test "Not nil" do
+              detail "Written message: #{output_message.inspect}"
+
+              if not action.nil?
+                detail "Remaining written message tests are skipped"
+              end
+
+              refute(output_message.nil?)
+            end
+            return
           end
-          return
         end
 
         context "Written Message: #{output_message.message_type}" do

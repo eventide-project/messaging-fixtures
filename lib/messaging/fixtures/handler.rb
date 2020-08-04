@@ -69,10 +69,6 @@ module Messaging
       end
 
       def assert_written_message(written_message, &action)
-        if written_message.nil?
-          action = nil
-        end
-
         fixture(WrittenMessage, written_message, input_message, &action)
       end
 

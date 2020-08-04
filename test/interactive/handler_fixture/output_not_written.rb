@@ -13,11 +13,10 @@ context "Handler Fixture" do
       message,
     ) do |handler|
 
-      # written_message = handler.assert_write(output_message_class)
+      written_message = nil
 
-written_message = nil
-      handler.assert_written_message(written_message) do
-        assert(true)
+      handler.assert_written_message(written_message) do |f|
+        comment "Block is not executed when there's no written message"
       end
     end
   end
