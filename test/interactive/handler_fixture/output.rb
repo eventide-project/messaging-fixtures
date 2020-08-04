@@ -35,7 +35,7 @@ context "Handler Fixture" do
         f.assert_expected_version(entity_version)
       end
 
-      written_message.() do |f|
+      handler.assert_written_message(written_message) do |f|
 
         f.assert_follows
 

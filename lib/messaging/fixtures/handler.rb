@@ -52,7 +52,7 @@ module Messaging
           detail "Handler Class: #{handler.class.name}"
 
           detail "Entity Class: #{entity.class.name}"
-          detail "Entity Data: #{entity&.attributes}"
+          detail "Entity Data: #{entity&.attributes.inspect}"
 
           handler.(input_message)
 

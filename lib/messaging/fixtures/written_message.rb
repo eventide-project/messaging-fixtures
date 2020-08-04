@@ -6,17 +6,25 @@ module Messaging
       include TestBench::Fixture
       include Initializer
 
-      initializer :output_message, :input_message
+      initializer :output_message, :input_message, :action
 
-      def self.build(output_message, input_message)
-        new(output_message, input_message)
+      def self.build(output_message, input_message, &action)
+        new(output_message, input_message, action)
       end
 
-      def call(&action)
+      def call
         input_message_class = input_message.class
         output_message_class = output_message.class
 
-        context "Written Message: #{output_message_class.message_type}" do
+        if output_message.nil?
+          test "Written Message" do
+            detail "Written message: #{output_message.inspect}"
+            assert(false)
+          end
+          return
+        end
+
+        context "Written Message: #{output_message.message_type}" do
           detail "Input Message Class: #{input_message_class.name}"
           detail "Written Message Class: #{output_message_class.name}"
 
