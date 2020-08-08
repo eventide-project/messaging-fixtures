@@ -2,6 +2,7 @@ require 'messaging/controls'
 
 require 'messaging/fixtures/controls/id'
 require 'messaging/fixtures/controls/time'
+require 'messaging/fixtures/controls/metadata'
 require 'messaging/fixtures/controls/message'
 require 'messaging/fixtures/controls/event'
 require 'messaging/fixtures/controls/sequence'

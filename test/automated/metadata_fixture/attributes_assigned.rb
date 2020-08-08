@@ -1,13 +1,12 @@
 require_relative '../automated_init'
 
-context "Message Fixture" do
+context "Metadata Fixture" do
   context "Assert Attributes Assigned" do
-    message = Controls::Event.example
-    message_class = message.class
+    metadata = Controls::Metadata.example
 
-    attribute_names = message_class.attribute_names
+    attribute_names = metadata.class.all_attribute_names
 
-    fixture = Message.build(message)
+    fixture = Metadata.build(metadata)
 
     fixture.assert_attributes_assigned(attribute_names)
 
