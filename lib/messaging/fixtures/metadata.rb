@@ -47,6 +47,11 @@ module Messaging
         attribute_names = Messaging::Message::Metadata.source_attribute_names
         assert_attributes_assigned(attribute_names)
       end
+
+      def assert_workflow_attributes_assigned
+        attribute_names = Messaging::Message::Metadata.workflow_attribute_names
+        assert_attributes_assigned(attribute_names)
+      end
     end
   end
 end
