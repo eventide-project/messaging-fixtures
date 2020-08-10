@@ -8,6 +8,9 @@ context "Message Fixture" do
       Message,
       message
     ) do |message|
+
+      fail 'Block will not be executed'
+
     end
   end
 end
