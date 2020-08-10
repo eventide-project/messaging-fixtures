@@ -48,6 +48,10 @@ module Messaging
 
           detail "Message Class: #{message_class.name}"
 
+          if not source_message.nil?
+            detail "Source Message Class: #{source_message_class.name}"
+          end
+
           if not action.nil?
             action.call(self)
           end
@@ -65,8 +69,6 @@ module Messaging
       end
 
       def assert_attributes_copied(attribute_names=nil)
-        detail "Source Message Class: #{source_message_class.name}"
-
         if source_message.nil?
           test "Source message not nil" do
             detail "Source Message: nil"

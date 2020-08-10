@@ -1,7 +1,7 @@
 require_relative '../interactive_init'
 
 context "Handler Fixture" do
-  context "Output" do
+  context "Written Message Block Not Executed" do
     handler = Controls::Handler.example
     message = Controls::Message.example
 

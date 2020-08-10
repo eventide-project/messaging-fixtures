@@ -62,17 +62,21 @@ module Messaging
         end
       end
 
+      def assert_input_message(attributes=nil, &action)
+        context "Input Message" do
+          fixture(Message, input_message, &action)
+        end
+      end
+
       def assert_write(message_class, &action)
         fixture = fixture(Write, handler.write, message_class, &action)
-
-        ## TODO why is this an assignment rather than a return?
-        ## written_message = fixture.message
-
         fixture.message
       end
 
       def assert_written_message(written_message, &action)
-        fixture(WrittenMessage, written_message, input_message, &action)
+        context "Written Message" do
+          fixture(Message, written_message, input_message, &action)
+        end
       end
 
       def refute_write(message_class=nil)
@@ -93,10 +97,6 @@ module Messaging
             refute(written)
           end
         end
-      end
-
-      def assert_input_message(attributes=nil, &action)
-        fixture = fixture(InputMessage, input_message, &action)
       end
     end
   end
