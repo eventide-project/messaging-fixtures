@@ -57,6 +57,16 @@ module Messaging
         attribute_names = Messaging::Message::Metadata.causation_attribute_names
         assert_attributes_assigned(attribute_names)
       end
+
+      def assert_correlation_stream_name(correlation_stream_name)
+        metadata_value = metadata.correlation_stream_name
+
+        test "correlation_stream_name" do
+          detail "Metadata Value: #{metadata_value}"
+          detail "Compare Value: #{correlation_stream_name}"
+          assert(metadata.correlation_stream_name == correlation_stream_name)
+        end
+      end
     end
   end
 end
