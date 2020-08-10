@@ -28,10 +28,5 @@ context "Message Fixture" do
     message.assert_attributes_assigned
     message.assert_follows
 
-    message.assert_metadata do |metadata|
-
-      metadata.assert_follows
-
-    end
   end
 end
