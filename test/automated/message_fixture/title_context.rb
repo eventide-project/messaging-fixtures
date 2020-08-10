@@ -1,7 +1,7 @@
 require_relative '../automated_init'
 
 context "Message Fixture" do
-  context "Message Given" do
+  context "Title Context" do
     message = Controls::Event.example
 
     fixture = Message.build(message)
