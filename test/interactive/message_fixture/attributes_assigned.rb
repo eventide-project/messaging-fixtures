@@ -1,15 +1,15 @@
 require_relative '../interactive_init'
 
 context "Message Fixture" do
-  context "No Message" do
-    message = nil
+  context "Assert Attributes Assigned" do
+    message = Controls::Event.example
 
     fixture(
       Message,
       message
     ) do |message|
 
-      fail 'Block will not be executed'
+      message.assert_attributes_assigned
 
     end
   end

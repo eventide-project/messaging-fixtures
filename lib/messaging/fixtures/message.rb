@@ -85,6 +85,14 @@ module Messaging
           attributes_context_name: "Attributes Copied: #{source_message_type} => #{message_type}"
         )
       end
+
+      def assert_metadata
+        fixture(
+          Metadata,
+          message.metadata,
+          source_message&.metadata
+        )
+      end
     end
   end
 end

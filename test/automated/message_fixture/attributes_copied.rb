@@ -30,27 +30,19 @@ context "Message Fixture" do
 
     attribute_context = fixture.test_session[context_text]
 
-    context "example_id" do
-      passed = attribute_context.test_passed?('example_id')
+    assignments = [
+      'example_id',
+      'quantity => amount',
+      'time'
+    ]
 
-      test "Passed" do
-        assert(passed)
-      end
-    end
+    assignments.each do |assignment|
+      context "#{assignment}" do
+        passed = attribute_context.test_passed?(assignment)
 
-    context "quantity => amount" do
-      passed = attribute_context.test_passed?('quantity => amount')
-
-      test "Passed" do
-        assert(passed)
-      end
-    end
-
-    context "time" do
-      passed = attribute_context.test_passed?('time')
-
-      test "Passed" do
-        assert(passed)
+        test "Passed" do
+          assert(passed)
+        end
       end
     end
   end
