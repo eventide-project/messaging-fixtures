@@ -64,7 +64,17 @@ module Messaging
         test "correlation_stream_name" do
           detail "Metadata Value: #{metadata_value}"
           detail "Compare Value: #{correlation_stream_name}"
-          assert(metadata.correlation_stream_name == correlation_stream_name)
+          assert(metadata_value == correlation_stream_name)
+        end
+      end
+
+      def assert_reply_stream_name(reply_stream_name)
+        metadata_value = metadata.reply_stream_name
+
+        test "reply_stream_name" do
+          detail "Metadata Value: #{metadata_value}"
+          detail "Compare Value: #{reply_stream_name}"
+          assert(metadata_value == reply_stream_name)
         end
       end
     end
