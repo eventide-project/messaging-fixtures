@@ -86,12 +86,16 @@ module Messaging
         )
       end
 
-      def assert_metadata
+      def assert_metadata(&action)
         fixture(
           Metadata,
           message.metadata,
-          source_message&.metadata
+          source_message&.metadata,
+          &action
         )
+
+        def assert_follows
+        end
       end
     end
   end
