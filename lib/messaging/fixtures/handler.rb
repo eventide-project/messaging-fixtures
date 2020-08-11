@@ -1,6 +1,8 @@
 module Messaging
   module Fixtures
     class Handler
+      Error = Class.new(RuntimeError)
+
       include TestBench::Fixture
       include Initializer
 
@@ -51,20 +53,21 @@ module Messaging
         context "Handler: #{handler.class.name.split('::').last}" do
           detail "Handler Class: #{handler.class.name}"
 
+          if action.nil?
+            raise Error, "Handler fixture must be executed with a block"
+          end
+
           detail "Entity Class: #{entity.class.name}"
           detail "Entity Data: #{entity&.attributes.inspect}"
 
           handler.(input_message)
 
-          if not action.nil?
-            action.call(self)
-          end
+          action.call(self)
         end
       end
 
       def assert_input_message(attributes=nil, &action)
         context_name = "Input Message"
-
         if not input_message.nil?
           context_name = "#{context_name}: #{input_message.class.message_type}"
         end
@@ -72,14 +75,8 @@ module Messaging
         fixture(Message, input_message, title_context_name: context_name, &action)
       end
 
-      def assert_write(message_class, &action)
-        fixture = fixture(Write, handler.write, message_class, &action)
-        fixture.message
-      end
-
       def assert_written_message(written_message, &action)
         context_name = "Written Message"
-
         if not written_message.nil?
           context_name = "#{context_name}: #{written_message.class.message_type}"
         end
@@ -87,19 +84,24 @@ module Messaging
         fixture(Message, written_message, input_message, title_context_name: context_name, &action)
       end
 
+      def assert_write(message_class, &action)
+        fixture = fixture(Write, handler.write, message_class, &action)
+        fixture.message
+      end
+
       def refute_write(message_class=nil)
         writer = handler.write
 
-        context_title = "No Write"
+        context_name = "No Write"
         if not message_class.nil?
           write_telemetry_data = Write.get_data(writer, message_class)
           written = !write_telemetry_data.nil?
-          context_title = "#{context_title}: #{message_class.message_type}"
+          context_name = "#{context_name}: #{message_class.message_type}"
         else
           written = writer.written?
         end
 
-        context context_title do
+        context context_name do
           detail "Message Class: #{message_class.inspect}"
           test "Not written" do
             refute(written)

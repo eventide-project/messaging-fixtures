@@ -5,7 +5,7 @@ context "Follows Fixture" do
     source_metadata = nil
     metadata = Controls::Metadata.example
 
-    fixture = Follows.build(metadata, source_metadata) {}
+    fixture = Follows.build(metadata, source_metadata)
 
     fixture.()
 

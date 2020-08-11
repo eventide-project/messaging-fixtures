@@ -1,6 +1,8 @@
 module Messaging
   module Fixtures
     class Message
+      Error = Class.new(RuntimeError)
+
       include TestBench::Fixture
       include Initializer
 
@@ -31,17 +33,17 @@ module Messaging
       end
 
       def call
-        context_title = title_context_name
+        context_name = title_context_name
 
-        context context_title do
+        context context_name do
+          if action.nil?
+            raise Error, "Message fixture must be executed with a block"
+          end
+
           if message.nil?
             test "Not nil" do
               detail "Message: nil"
-
-              if not action.nil?
-                detail "Remaining message tests are skipped"
-              end
-
+              detail "Remaining message tests are skipped"
               refute(message.nil?)
             end
             return
@@ -53,9 +55,7 @@ module Messaging
             detail "Source Message Class: #{source_message_class.name}"
           end
 
-          if not action.nil?
-            action.call(self)
-          end
+          action.call(self)
         end
       end
 

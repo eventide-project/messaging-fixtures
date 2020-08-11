@@ -40,20 +40,31 @@ module Messaging
       def call
         message_class = message&.class
 
-        context "Write: #{message_class&.message_type || 'nil'}" do
+        context_name = 'Write'
+        if not message_class.nil?
+          context_name = "#{context_name}: #{message_class&.message_type}"
+        end
+
+        context context_name do
+          if action.nil?
+            raise Error, "Write fixture must be executed with a block"
+          end
+
           detail "Message Class: #{message_class.inspect}"
 
           written = !message.nil?
 
           test "Written" do
+            if not action.nil?
+              detail "Remaining message tests are skipped"
+            end
+
             assert(written)
           end
 
-          return if !written || action.nil?
+          return if !written
 
-          if not action.nil?
-            action.call(self)
-          end
+          action.call(self)
         end
 
         message

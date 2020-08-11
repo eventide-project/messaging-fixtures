@@ -6,7 +6,7 @@ context "Message Fixture" do
 
     context_name = SecureRandom.hex
 
-    fixture = Message.build(message, title_context_name: context_name)
+    fixture = Message.build(message, title_context_name: context_name) {}
 
     fixture.()
 

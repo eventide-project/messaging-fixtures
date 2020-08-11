@@ -8,11 +8,11 @@ context "Handler Fixture" do
 
       output_message_class = Controls::Event::Output
 
-      fixture = Handler.build(handler, message)
+      fixture = Handler.build(handler, message) {}
 
       fixture.()
 
-      result = fixture.assert_write(output_message_class)
+      result = fixture.assert_write(output_message_class) {}
 
       context "Result" do
         test "Is the output message" do

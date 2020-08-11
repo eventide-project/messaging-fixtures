@@ -1,6 +1,8 @@
 module Messaging
   module Fixtures
     class Metadata
+      Error = Class.new(RuntimeError)
+
       include TestBench::Fixture
       include Initializer
 
@@ -12,6 +14,10 @@ module Messaging
 
       def call
         context "Metadata" do
+          if action.nil?
+            raise Error, "Metadata fixture must be executed with a block"
+          end
+
           if metadata.nil?
             test "Not nil" do
               detail "Metadata: nil"
@@ -25,9 +31,7 @@ module Messaging
             return
           end
 
-          if not action.nil?
-            action.call(self)
-          end
+          action.call(self)
         end
       end
 

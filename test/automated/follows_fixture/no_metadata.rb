@@ -4,7 +4,7 @@ context "Follows Fixture" do
   context "No Metadata" do
     metadata = nil
 
-    fixture = Follows.build(metadata) {}
+    fixture = Follows.build(metadata)
 
     fixture.()
 

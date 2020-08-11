@@ -3,7 +3,7 @@ require_relative '../../../automated_init'
 context "Handler Fixture" do
   context "Refute Write" do
     context "Written" do
-      context "No Message Class Argument Given" do
+      context "Given Message Class Argument" do
         handler = Controls::Handler.example
         message = Controls::Message.example
 
