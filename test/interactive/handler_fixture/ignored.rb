@@ -19,9 +19,10 @@ context "Handler Fixture" do
       entity
     ) do |handler|
 
-      handler.assert_input_message do |f|
-        f.assert_attributes_assigned
-        f.assert_metadata_attributes_assigned
+      handler.assert_input_message do |input_message|
+        input_message.assert_metadata do |metadata|
+          metadata.assert_source_attributes_assigned
+        end
       end
 
       handler.refute_write

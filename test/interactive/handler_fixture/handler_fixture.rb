@@ -38,7 +38,7 @@ context "Handler Fixture" do
     end
 
     handler.assert_written_message(message) do |written_message|
-      written_message.assert_attributes_assigned
+      written_message.assert_follows
 
       written_message.assert_attributes_copied([
         :example_id,
@@ -46,7 +46,7 @@ context "Handler Fixture" do
         :time,
       ])
 
-      written_message.assert_follows
+      written_message.assert_attributes_assigned
     end
 
     handler.refute_write(alternate_output_message_class)
