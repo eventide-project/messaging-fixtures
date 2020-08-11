@@ -66,7 +66,7 @@ module Messaging
         end
       end
 
-      def assert_input_message(attributes=nil, &action)
+      def assert_input_message(&action)
         context_name = "Input Message"
         if not input_message.nil?
           context_name = "#{context_name}: #{input_message.class.message_type}"
