@@ -2,21 +2,19 @@ require_relative '../automated_init'
 
 context "Write Fixture" do
   context "Assert Written" do
-    context "Written" do
+    context "Not Written" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
-
-      writer.(message, stream_name)
 
       fixture = Write.build(writer, message.class)
 
       fixture.()
 
-      passed = fixture.test_session.test_passed?('Written')
+      failed = fixture.test_session.test_failed?('Written')
 
-      test "Passed" do
-        assert(passed)
+      test "Failed" do
+        assert(failed)
       end
     end
   end
