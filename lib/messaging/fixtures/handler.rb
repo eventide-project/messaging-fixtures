@@ -11,14 +11,14 @@ module Messaging
         entity.sequence
       end
 
-      initializer :handler, :input_message, :entity, :entity_version, :time, :uuid, :action
+      initializer :handler, :input_message, :entity, :entity_version, :clock_time, :identifier_uuid, :action
 
-      def self.build(handler, input_message, entity=nil, entity_version=nil, time: nil, uuid: nil, &action)
-        instance = new(handler, input_message, entity, entity_version, time, uuid, action)
+      def self.build(handler, input_message, entity=nil, entity_version=nil, clock_time: nil, identifier_uuid: nil, &action)
+        instance = new(handler, input_message, entity, entity_version, clock_time, identifier_uuid, action)
 
         set_store_entity(handler, entity, entity_version)
-        set_clock_time(handler, time)
-        set_identifier_uuid(handler, uuid)
+        set_clock_time(handler, clock_time)
+        set_identifier_uuid(handler, identifier_uuid)
 
         instance
       end
@@ -29,23 +29,23 @@ module Messaging
         handler.store.add(entity.id, entity, entity_version)
       end
 
-      def self.set_clock_time(handler, time)
-        if time.nil?
+      def self.set_clock_time(handler, clock_time)
+        if clock_time.nil?
           if handler.respond_to?(:clock)
-            handler.clock.now = Defaults.time
+            handler.clock.now = Defaults.clock_time
           end
         else
-          handler.clock.now = time
+          handler.clock.now = clock_time
         end
       end
 
-      def self.set_identifier_uuid(handler, uuid)
-        if uuid.nil?
+      def self.set_identifier_uuid(handler, identifier_uuid)
+        if identifier_uuid.nil?
           if handler.respond_to?(:identifier)
-            handler.identifier.set(Defaults.uuid)
+            handler.identifier.set(Defaults.identifier_uuid)
           end
         else
-          handler.identifier.set(uuid)
+          handler.identifier.set(identifier_uuid)
         end
       end
 
@@ -59,6 +59,14 @@ module Messaging
 
           detail "Entity Class: #{entity.class.name}"
           detail "Entity Data: #{entity&.attributes.inspect}"
+
+          if not clock_time.nil?
+            detail "Clock Time: #{clock_time.inspect}"
+          end
+
+          if not identifier_uuid.nil?
+            detail "Identifier UUID: #{identifier_uuid}"
+          end
 
           handler.(input_message)
 

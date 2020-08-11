@@ -15,7 +15,7 @@ context "Handler Fixture" do
 
         identifier = handler.identifier
 
-        default_id = Handler::Defaults.uuid
+        default_id = Handler::Defaults.identifier_uuid
 
         test "Handler identifier is set to default ID" do
           assert(identifier.get == default_id)

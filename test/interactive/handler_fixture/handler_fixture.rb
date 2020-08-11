@@ -16,12 +16,17 @@ context "Handler Fixture" do
 
   alternate_output_message_class = Controls::Event::AlternateOutput
 
+  clock_time = Controls::Time::Processed::Raw.example
+  identifier_uuid = Controls::ID.example
+
   fixture(
     Handler,
     handler,
     message,
     entity,
-    entity_version
+    entity_version,
+    clock_time: clock_time,
+    identifier_uuid: identifier_uuid
   ) do |handler|
 
     handler.assert_input_message do |input_message|
@@ -46,7 +51,11 @@ context "Handler Fixture" do
         :time,
       ])
 
+      written_message.assert_attribute_value(:processed_time, Clock.iso8601(clock_time))
+      written_message.assert_attribute_value(:sequence, message_sequence)
+
       written_message.assert_attributes_assigned
+
     end
 
     handler.refute_write(alternate_output_message_class)

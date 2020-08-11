@@ -13,7 +13,7 @@ context "Handler Fixture" do
         fixture = Handler.build(
           handler,
           input_message,
-          time: time
+          clock_time: time
         )
 
         clock = handler.clock

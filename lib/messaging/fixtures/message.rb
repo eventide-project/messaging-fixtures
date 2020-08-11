@@ -104,6 +104,19 @@ module Messaging
 
         fixture(Follows, metadata, source_metadata)
       end
+
+      def assert_attribute_value(name, value)
+        context "Attribute Value" do
+          attribute_value = message.send(name)
+
+          test "#{name}" do
+            detail "Attribute Value: #{attribute_value.inspect}"
+            detail "Compare Value: #{value.inspect}"
+
+            assert(attribute_value == value)
+          end
+        end
+      end
     end
   end
 end

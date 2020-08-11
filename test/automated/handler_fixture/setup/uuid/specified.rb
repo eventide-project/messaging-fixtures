@@ -13,7 +13,7 @@ context "Handler Fixture" do
         fixture = Handler.build(
           handler,
           input_message,
-          uuid: uuid
+          identifier_uuid: uuid
         )
 
         identifier = handler.identifier
