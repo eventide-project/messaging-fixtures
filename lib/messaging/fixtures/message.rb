@@ -107,7 +107,7 @@ module Messaging
 
       def assert_attribute_value(name, value)
         context "Attribute Value" do
-          attribute_value = message.send(name)
+          attribute_value = message.public_send(name)
 
           test "#{name}" do
             detail "Attribute Value: #{attribute_value.inspect}"
