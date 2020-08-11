@@ -51,7 +51,11 @@ context "Handler Fixture" do
         :time,
       ])
 
+      written_message.assert_attribute_value(:processed_time, Clock.iso8601(clock_time))
+      written_message.assert_attribute_value(:sequence, message_sequence)
+
       written_message.assert_attributes_assigned
+
     end
 
     handler.refute_write(alternate_output_message_class)

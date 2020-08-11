@@ -38,6 +38,18 @@ module Messaging
           Metadata.example
         end
 
+        module SomeMessage
+          def self.example
+            Example.new
+          end
+
+          class Example
+            include Messaging::Message
+
+            attribute :some_attribute, String
+          end
+        end
+
         module Metadata
           def self.example
             metadata = Messaging::Message::Metadata.new
