@@ -33,10 +33,10 @@ context "Write Fixture" do
 
       fixture.assert_reply_stream_name(reply_stream_name)
 
-      passed = fixture.test_session.test_passed?('Reply stream name')
+      failed = fixture.test_session.test_failed?('Reply stream name')
 
-      test "Not Passed" do
-        refute(passed)
+      test "Failed" do
+        assert(failed)
       end
     end
   end

@@ -29,10 +29,10 @@ context "Write Fixture" do
 
       fixture.()
 
-      passed = fixture.test_session.test_passed?('Written')
+      failed = fixture.test_session.test_failed?('Written')
 
-      test "Not Passed" do
-        refute(passed)
+      test "Failed" do
+        assert(failed)
       end
     end
   end

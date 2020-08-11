@@ -31,10 +31,10 @@ context "Write Fixture" do
 
       fixture.assert_expected_version(11)
 
-      passed = fixture.test_session.test_passed?('Expected version')
+      failed = fixture.test_session.test_failed?('Expected version')
 
-      test "Not Passed" do
-        refute(passed)
+      test "Failed" do
+        assert(failed)
       end
     end
   end
