@@ -45,8 +45,12 @@ module Messaging
 
             if example.alternate_condition?
               alternate_output = Controls::Event::AlternateOutput.follow(input, copy: attributes)
+
               alternate_output.processed_time = time
               alternate_output.sequence = sequence
+
+              alternate_output.metadata.correlation_stream_name = 'someCorrelationStream'
+              alternate_output.metadata.reply_stream_name = 'someReplyStream'
 
               write.(alternate_output, stream_name, expected_version: version)
 
@@ -54,8 +58,12 @@ module Messaging
             end
 
             output = Controls::Event::Output.follow(input, copy: attributes)
+
             output.processed_time = time
             output.sequence = sequence
+
+            output.metadata.correlation_stream_name = 'someCorrelationStream'
+            output.metadata.reply_stream_name = 'someReplyStream'
 
             write.(output, stream_name, expected_version: version)
           end

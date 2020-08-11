@@ -167,6 +167,24 @@ context "Handle" do
               end
             end
           end
+
+          context "Metadata" do
+            context "Assigned" do
+              { correlation_stream_name: 'someCorrelationStream', reply_stream_name: 'someReplyStream' }.each do |name, value|
+                context do
+                  metadata_value = output.metadata.public_send(name)
+                  compare_value = value
+
+                  test "#{name}" do
+                    detail "Metadata Vale: #{metadata_value.inspect}"
+                    detail "Compare Value: #{compare_value.inspect}"
+
+                    assert(metadata_value == compare_value)
+                  end
+                end
+              end
+            end
+          end
         end
 
         context "Final Inspection" do
