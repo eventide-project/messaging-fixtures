@@ -17,6 +17,7 @@ context "Handler Fixture" do
   alternate_output_message_class = Controls::Event::AlternateOutput
 
   clock_time = Controls::Time::Processed::Raw.example
+  identifier_uuid = Controls::ID.example
 
   fixture(
     Handler,
@@ -24,7 +25,8 @@ context "Handler Fixture" do
     message,
     entity,
     entity_version,
-    time: clock_time
+    clock_time: clock_time,
+    identifier_uuid: identifier_uuid
   ) do |handler|
 
     handler.assert_input_message do |input_message|
