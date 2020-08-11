@@ -16,12 +16,15 @@ context "Handler Fixture" do
 
   alternate_output_message_class = Controls::Event::AlternateOutput
 
+  clock_time = Controls::Time::Processed::Raw.example
+
   fixture(
     Handler,
     handler,
     message,
     entity,
-    entity_version
+    entity_version,
+    time: clock_time
   ) do |handler|
 
     handler.assert_input_message do |input_message|

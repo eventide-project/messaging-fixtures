@@ -15,7 +15,7 @@ context "Handler Fixture" do
 
         clock = handler.clock
 
-        default_time = Handler::Defaults.time
+        default_time = Handler::Defaults.clock_time
 
         test "Handler clock time is set to default time" do
           assert(clock.now == default_time)
