@@ -20,17 +20,18 @@ module Messaging
         source_message_class.name.split('::').last
       end
 
-      initializer :message, :source_message, :action
+      def title_context_name
+        @title_context_name ||= "Message"
+      end
 
-      def self.build(message, source_message=nil, &action)
-        new(message, source_message, action)
+      initializer :message, :source_message, na(:title_context_name), :action
+
+      def self.build(message, source_message=nil, title_context_name: nil, &action)
+        new(message, source_message, title_context_name, action)
       end
 
       def call
-        context_title = "Message"
-        if not message.nil?
-          context_title = "#{context_title}: #{message_class.message_type}"
-        end
+        context_title = title_context_name
 
         context context_title do
           if message.nil?

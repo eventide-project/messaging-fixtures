@@ -4,13 +4,14 @@ context "Message Fixture" do
   context "Title Context" do
     message = Controls::Event.example
 
-    fixture = Message.build(message)
+    context_name = SecureRandom.hex
+
+    fixture = Message.build(message, title_context_name: context_name)
 
     fixture.()
 
-    context_text = "Message: #{message.class.message_type}"
-    context "Context: \"#{context_text}\"" do
-      printed = fixture.test_session.context?(context_text)
+    context "Context Name" do
+      printed = fixture.test_session.context?(context_name)
 
       test "Printed" do
         assert(printed)

@@ -63,9 +63,13 @@ module Messaging
       end
 
       def assert_input_message(attributes=nil, &action)
-        context "Input Message" do
-          fixture(Message, input_message, &action)
+        context_name = "Input Message"
+
+        if not input_message.nil?
+          context_name = "#{context_name}: #{input_message.class.message_type}"
         end
+
+        fixture(Message, input_message, title_context_name: context_name, &action)
       end
 
       def assert_write(message_class, &action)
@@ -74,9 +78,13 @@ module Messaging
       end
 
       def assert_written_message(written_message, &action)
-        context "Written Message" do
-          fixture(Message, written_message, input_message, &action)
+        context_name = "Written Message"
+
+        if not written_message.nil?
+          context_name = "#{context_name}: #{written_message.class.message_type}"
         end
+
+        fixture(Message, written_message, input_message, title_context_name: context_name, &action)
       end
 
       def refute_write(message_class=nil)
