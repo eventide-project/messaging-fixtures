@@ -57,6 +57,11 @@ context "Handler Fixture" do
         written_message.assert_attribute_value(:sequence, message_sequence)
 
         written_message.assert_attributes_assigned
+
+        written_message.assert_metadata do |metadata|
+          metadata.assert_correlation_stream_name('someCorrelationStream')
+          metadata.assert_reply_stream_name('someReplyStream')
+        end
       end
 
       handler.refute_write(alternate_output_message_class)
