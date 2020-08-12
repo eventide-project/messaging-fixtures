@@ -15,42 +15,6 @@ A fixture is just a plain old Ruby object that includes the TestBench API. A fix
 The `Messaging::Fixtures::Handler` fixture tests the handling of a message. It has affordances to verify the attributes of the input message and its metadata, as well as the output message written as a result of handling the message, and the arguments sent to the writer. The handler fixture also allows a handler's entity store to be controlled, including the entity and entity version returned from the store, and it allows for control of the handler's clock and UUID generator.
 
 ``` ruby
-require_relative 'test/test_init'
-
-class SomeMessage
-  include Messaging::Message
-
-  attribute :something_id, String
-  attribute :amount, Integer
-  attribute :time, String
-end
-
-class SomeEvent
-  include Messaging::Message
-
-  attribute :something_id, String
-  attribute :quantity, Integer
-  attribute :time, String
-  attribute :processed_time, String
-end
-
-class Something
-  include Schema::DataStructure
-
-  LIMIT = 100
-
-  attribute :id, String
-  attribute :total, Integer, default: 0
-
-  def accumulate(quantity)
-    self.total += quantity
-  end
-
-  def limit?(quantity)
-    (quantity + total) >= LIMIT
-  end
-end
-
 class SomeHandler
   include Messaging::Handle
 
@@ -159,6 +123,8 @@ context "Handle SomeMessage" do
 end
 ```
 
+_Note: This example is abridged for brevity. The unabridge version can be reviewed at: [https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb](https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb)_
+
 Running the test is no different than [running any TestBench test](http://test-bench.software/user-guide/running-tests.html). In its simplest form, running the test is done by passing the test file name to the `ruby` executable.
 
 ``` bash
@@ -167,7 +133,7 @@ ruby test/handler.rb
 
 The test script and the fixture work together as if they are the same test.
 
-```
+``` text
 Handle SomeMessage
   Handler: SomeHandler
     Input Message: SomeMessage
@@ -212,7 +178,7 @@ The fixture will print more detailed output if the `TEST_BENCH_DETAIL` environme
 TEST_BENCH_DETAIL=on ruby test/handler.rb
 ```
 
-```
+``` text
 Handle SomeMessage
   Handler: SomeHandler
     Handler Class: SomeHandler
@@ -302,69 +268,184 @@ Handle SomeMessage
           Compare Value: someReplyStream
 ```
 
-### Projection Fixture API
+## Handler Fixture API
 
-Class: `EntityProjection::Fixtures::Projection`
+Class: `Messaging::Fixtures::Handler`
 
-#### Construct the Projection Fixture
+### Actuating the Handler Fixture
 
-The projection fixture is only ever constructed directly when [testing](http://test-bench.software/user-guide/fixtures.html#testing-fixtures) the fixture. Usually, when the fixture is used to fulfill its purpose of testing a projection, TestBench's `fixture` method is used.
+The fixture is executed using TestBench's `fixture` method.
 
 ``` ruby
-self.build(projection, event, &action)
+fixture(Messaging::Fixtures::Handler, handler, input_message, entity=nil, entity_version=nil, clock_time: nil, identifier_uuid: nil, &test_block)
+```
+
+The first argument sent to the `fixture` method is the `Messaging::Fixtures::Handler` class. Subsequent arguments are the specific construction parameters of the handler fixture.
+
+**Parameters**
+
+| Name | Description | Type |
+| --- | --- | --- |
+| handler | Handler instance that will receive the input message and process it | Messaging::Message |
+| input_message | Input message that will be sent to the handler in order to exercise it | Messaging::Message |
+| entity | Optional entity object that can be retrieved from the handler's entity store | (any) |
+| entity_version | Optional entity version that can be retrieved along with the entity from the handler's entity store | Integer |
+| clock_time | Optional time object used to fix the handler's clock to that specific time | Time |
+| identifier_uuid | Optional UUID string object used to fix the handler's identifier generator to that specific UUID | String |
+| test_block | Block used for invoking other assertions that are part of the handler fixture's API | Proc |
+
+**Block Parameter**
+
+The `handler_fixture` argument is passed to the `test_block` if the block is given.
+
+| Name | Description | Type |
+| --- | --- | --- |
+| handler_fixture | Instance of the handler fixture that is being actuated, constructed with the supplemental arguments sent to the `fixture` method | Messaging::Fixtures::Handler |
+
+**Methods**
+
+The following methods are available from the `handler_fixture` block parameter, and on an instance of `Messaging::Fixtures::Handler`:
+
+- `assert_input_message`
+- `assert_write`
+- `assert_written_message`
+- `refute_write`
+
+### Test Input Message Prerequisites
+
+``` ruby
+assert_input_message(&test_block)
+```
+
+The tests performed on the message are executed by an instance of the `Messaging::Fixtures::Message` fixture, which is constructed and executed by the handler fixture's `assert_input_message` method. The message's metadata can also be tested. The metadata tests are executed by the message fixture's access to the `Messaging::Fixtures::Metadata` fixture.
+
+**Example**
+
+``` ruby
+handler_fixture.assert_input_message do |message_fixture|
+  message_fixture.assert_attributes_assigned
+
+  message_fixture.assert_metadata do |metadata_fixture|
+    metadata_fixture.assert_source_attributes_assigned
+  end
+end
+```
+
+**Parameters**
+
+| Name | Description | Type |
+| --- | --- | --- |
+| test_block | Block used for invoking other assertions that are part of the message fixture's API | Proc |
+
+**Block Parameter**
+
+The `message_fixture` argument is passed to the `test_block` if the block is given.
+
+| Name | Description | Type |
+| --- | --- | --- |
+| message_fixture | Instance of the the messaging fixture that is used to verify the input message | Messaging::Fixtures::Message |
+
+See the [Messaging::Fixtures::Message](TODO) class for details on the methods available for testing the input message and its metadata.
+
+### Test a Handler's Writing of an Output Message
+
+``` ruby
+assert_write(message_class, &test_block)
+```
+
+The tests performed on the write are executed by an instance of the `Messaging::Fixtures::Write` fixture, which is constructed and executed by the handler fixture's `assert_write` method. The `asert_write` method returns an instance of the message that was written so that the written message can be further tested using the handler fixture's `assert_output_message` method.
+
+**Example**
+
+``` ruby
+output_message = handler_fixture.assert_write(output_message_class) do |write_fixture|
+  write_fixture.assert_stream_name(output_stream_name)
+  write_fixture.assert_expected_version(entity_version)
+end
 ```
 
 **Returns**
 
-Instance of `EntityProjection::Fixtures::Projection`
+Instance of `Messaging::Message` class that was sent to the handler's writer, and whose class matches the `assert_write` method's `message_class` argument.
 
 **Parameters**
 
 | Name | Description | Type |
 | --- | --- | --- |
-| projection | Projection used to apply the event to the entity | EntityProjection |
-| entity | Object to project state into  | (any) |
-| event | Event to project state from | Messaging::Message |
-| action | Supplemental proc evaluated in the context of the fixture. Used for invoking other assertions that are part of the fixture's API. | Proc |
+| message_class | Class of the output message that is expected to have been sent to the handler's writer | Proc |
+| test_block | Block used for invoking other assertions that are part of the write fixture's API | Proc |
 
-#### Actuating the Fixture
+If no written message matches the class specified by the `message_class` parameter, then the `test_block` block is not executed and the `assert_write` test fails.
 
-The projection fixture is only ever actuated directly when [testing](http://test-bench.software/user-guide/fixtures.html#testing-fixtures) the fixture. Usually, when the fixture is used to fulfill its purpose of testing a projection, TestBench's `fixture` method is used.
+**Block Parameter**
+
+The `write_fixture` argument is passed to the `test_block` if the block is given.
+
+| Name | Description | Type |
+| --- | --- | --- |
+| write_fixture | Instance of the the write fixture that is used to verify the actuation of the handler's writer | Messaging::Fixtures::Write |
+
+See the [Messaging::Fixtures::Write](TODO) class for details on the methods available for testing the actuation of the writer.
+
+**Methods**
+
+The following methods are available from the `write_fixture` block parameter, and on an instance of `Messaging::Fixtures::Write`:
+
+- `assert_stream_name`
+- `assert_expected_version`
+
+### Test the Output Message Sent to the Handler's Writer
 
 ``` ruby
-call()
+assert_written_message(written_message, &test_block)
 ```
 
-#### Testing Attribute Values
-
-The `assert_attributes_copied` method tests that attribute values are copied from the event being applied to the entity receiving the attribute data. By default, all attributes from the event are compared to entity attributes of the same name. An optional list of attribute names can be passed. When the list of attribute names is passed, only those attributes will be compared. The list of attribute names can also contain maps of attribute names for comparing values when the entity attribute name is not the same as the event attribute name.
+**Example**
 
 ``` ruby
-assert_attributes_copied(attribute_names=[])
-```
+handler_fixture.assert_written_message(output_message) do |written_message_fixture|
+  written_message_fixture.assert_follows
 
-**Parameters**
+  written_message_fixture.assert_attributes_copied([
+    :something_id,
+    { :amount => :quantity },
+    :time,
+  ])
 
-| Name | Description | Type | Default |
-| --- | --- | --- | --- |
-| attribute_names | Optional list of attribute names to limit testing to | Array of Symbol or Hash | Attribute names of left-hand side object |
+  written_message_fixture.assert_attribute_value(:processed_time, Clock.iso8601(processed_time))
 
-The `assert_attributes_copied` method is implemented using the `Schema::Fixture::Equality` fixture from the [Schema Fixture library](https://github.com/eventide-project/schema-fixtures).
+  written_message_fixture.assert_attributes_assigned
 
-#### Testing Individual Attribute Transformations
-
-Projects may not just copy attributes from an event to an entity verbatim. A projection might transform or convert the event data that it's assigning to an entity. The `assert_transformed_and_copied` method allows an event attribute to be transformed before being compared to an entity attribute.
-
-``` ruby
-assert_time_converted_and_copied(time_attribute_name)
+  written_message_fixture.assert_metadata do |metadata_fixture|
+    metadata_fixture.assert_correlation_stream_name('someCorrelationStream')
+    metadata_fixture.assert_reply_stream_name('someReplyStream')
+  end
+end
 ```
 
 **Parameters**
 
 | Name | Description | Type |
 | --- | --- | --- |
-| attribute_name | Name of the event attribute, or map of event attribute name to entity attribute name, to be compared | Symbol or Hash |
+| written_message | Message instance that was sent to the handler's writer | `Messaging::Message` |
+| test_block | Block used for invoking other assertions that are part of the message fixture's API | Proc |
+
+**Block Parameter**
+
+The `message_fixture` argument is passed to the `test_block` if the block is given.
+
+| Name | Description | Type |
+| --- | --- | --- |
+| message_fixture | Instance of the the messaging fixture that is used to verify the input message | Messaging::Fixtures::Message |
+
+See the [Messaging::Fixtures::Message](TODO) class for details on the methods available for testing the written message and its metadata.
+
+## More Documentation
+
+More detailed documentation on the fixtures and their APIs can be found in the test fixtures user guide on the Eventide documentation site:
+
+[http://docs.eventide-project.org/user-guide/test-fixtures/](http://docs.eventide-project.org/user-guide/test-fixtures/)
 
 ## License
 
-The `entity-projection-fixtures` library is released under the [MIT License](https://github.com/eventide-project/entity-projection-fixtures/blob/master/MIT-License.txt).
+The Messaging Fixtures library is released under the [MIT License](https://github.com/eventide-project/messaging-fixtures/blob/master/MIT-License.txt).
