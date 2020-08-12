@@ -15,60 +15,146 @@ A fixture is just a plain old Ruby object that includes the TestBench API. A fix
 The `Messaging::Fixtures::Handler` fixture tests the handling of a message. It has affordances to verify the attributes of the input message and its metadata, as well as the output message written as a result of handling the message, and the arguments sent to the writer. The handler fixture also allows a handler's entity store to be controlled, including the entity and entity version returned from the store, and it allows for control of the handler's clock and UUID generator.
 
 ``` ruby
-class SomeEntity
-  include Schema::DataStructure
+require_relative 'test/test_init'
 
-  attribute :id, String
-  attribute :amount, Numeric, default: 0
-  attribute :time, ::Time
-  attribute :other_time, ::Time
+class SomeMessage
+  include Messaging::Message
+
+  attribute :something_id, String
+  attribute :amount, Integer
+  attribute :time, String
 end
 
 class SomeEvent
   include Messaging::Message
 
-  attribute :example_id, String
-  attribute :amount, Numeric, default: 0
+  attribute :something_id, String
+  attribute :quantity, Integer
   attribute :time, String
-  attribute :some_time, String
+  attribute :processed_time, String
 end
 
-class SomeProjection
-  include EntityProjection
+class Something
+  include Schema::DataStructure
 
-  entity_name :some_entity
+  LIMIT = 100
 
-  apply SomeEvent do |some_event|
-    some_entity.id = some_event.example_id
-    some_entity.amount = some_event.amount
-    some_entity.time = Time.parse(some_event.time)
-    some_entity.other_time = Time.parse(some_event.some_time)
+  attribute :id, String
+  attribute :total, Integer, default: 0
+
+  def accumulate(quantity)
+    self.total += quantity
+  end
+
+  def limit?(quantity)
+    (quantity + total) >= LIMIT
   end
 end
 
-context "SomeProjection" do
-  some_event = SomeEvent.new
-  some_event.example_id = SecureRandom.uuid
-  some_event.amount = 11
-  some_event.time = Time.utc(2000)
-  some_event.some_time = Time.utc(2000) + 1
+class SomeHandler
+  include Messaging::Handle
 
-  some_entity = SomeEntity.new
-  some_projection = SomeProjection.build(entity)
+  dependency :clock, Clock::UTC
+  dependency :store, SomeStore
+  dependency :write, Messaging::Write
+
+  handle SomeMessage do |some_message|
+    something_id = some_message.something_id
+
+    something, version = store.fetch(something_id, include: :version)
+
+    if something.limit?(some_message.amount)
+      logger.info(tag: :ignored) { "Message ignored: limit reached (Quantity: #{something.quantity}, Amount: #{some_message.amount}, Limit: #{Something.LIMIT})" }
+      return
+    end
+
+    attributes = [
+      :something_id,
+      { :amount => :quantity },
+      :time,
+    ]
+
+    time = clock.iso8601
+
+    some_event = SomeEvent.follow(some_message, copy: attributes)
+
+    some_event.processed_time = time
+
+    some_event.metadata.correlation_stream_name = 'someCorrelationStream'
+    some_event.metadata.reply_stream_name = 'someReplyStream'
+
+    stream_name = stream_name(something_id, category: 'something')
+
+    write.(some_event, stream_name, expected_version: version)
+  end
+end
+
+context "Handle SomeMessage" do
+  effective_time = Clock::UTC.now
+  processed_time = effective_time + 1
+
+  something_id = SecureRandom.uuid
+
+  message = SomeMessage.new
+  message.something_id = something_id
+  message.amount = 1
+  message.time = Clock.iso8601(effective_time)
+
+  message.metadata.stream_name = "something:command-#{something_id}"
+  message.metadata.position = 11
+  message.metadata.global_position = 111
+
+  something = Something.new
+  something.id = something_id
+  something.total = 98
+
+  entity_version = 1111
+
+  event_class = SomeEvent
+  output_stream_name = "something-#{something_id}"
+
+  handler = SomeHandler.new
 
   fixture(
-    EntityProjection::Fixtures::Projection,
-    some_projection,
-    some_event
-  ) do |fixture|
+    Handler,
+    handler,
+    message,
+    something,
+    entity_version,
+    clock_time: processed_time
+  ) do |handler|
 
-    fixture.assert_attributes_copied([
-      { :example_id => :id },
-      :amount
-    ])
+    handler.assert_input_message do |message|
+      message.assert_attributes_assigned
 
-    fixture.assert_transformed_and_copied(:time) { |v| Time.parse(v) }
-    fixture.assert_transformed_and_copied(:some_time => :other_time) { |v| Time.parse(v) }
+      message.assert_metadata do |metadata|
+        metadata.assert_source_attributes_assigned
+      end
+    end
+
+    event = handler.assert_write(event_class) do |write|
+      write.assert_stream_name(output_stream_name)
+      write.assert_expected_version(entity_version)
+    end
+
+    handler.assert_written_message(event) do |written_message|
+      written_message.assert_follows
+
+      written_message.assert_attributes_copied([
+        :something_id,
+        { :amount => :quantity },
+        :time,
+      ])
+
+      written_message.assert_attribute_value(:processed_time, Clock.iso8601(processed_time))
+
+      written_message.assert_attributes_assigned
+
+      written_message.assert_metadata do |metadata|
+        metadata.assert_correlation_stream_name('someCorrelationStream')
+        metadata.assert_reply_stream_name('someReplyStream')
+      end
+    end
   end
 end
 ```
@@ -76,54 +162,144 @@ end
 Running the test is no different than [running any TestBench test](http://test-bench.software/user-guide/running-tests.html). In its simplest form, running the test is done by passing the test file name to the `ruby` executable.
 
 ``` bash
-ruby test/projection.rb
+ruby test/handler.rb
 ```
 
 The test script and the fixture work together as if they are the same test.
 
 ```
-SomeProjection
-  Apply SomeEvent to SomeEntity
-    Copied
-      example_id => id
-      amount
-    Transformed and copied
-      time
-    Transformed and copied
-      some_time => other_time
+Handle SomeMessage
+  Handler: SomeHandler
+    Input Message: SomeMessage
+      Attributes Assigned
+        something_id
+        amount
+        time
+      Metadata
+        Source Attributes Assigned
+          stream_name
+          position
+          global_position
+    Write: SomeEvent
+      Written
+      Stream name
+      Expected version
+    Written Message: SomeEvent
+      Follows
+      Attributes Copied: SomeMessage => SomeEvent
+        something_id
+        amount => quantity
+        time
+      Attribute Value
+        processed_time
+      Attributes Assigned
+        something_id
+        quantity
+        time
+        processed_time
+      Metadata
+        correlation_stream_name
+        reply_stream_name
 ```
 
-The output below the "SomeProjection" line is from the projection fixture.
+The output below the "Handle SomeMessage" line is from the handler fixture.
 
 ### Detailed Output
 
 The fixture will print more detailed output if the `TEST_BENCH_DETAIL` environment variable is set to `on`.
 
 ``` bash
-TEST_BENCH_DETAIL=on ruby test/projection.rb
+TEST_BENCH_DETAIL=on ruby test/handler.rb
 ```
 
 ```
-SomeProjection
-  Projection Class: SomeProjection
-  Apply SomeEvent to SomeEntity
-    Event Class: SomeEvent
-    Entity Class: SomeEntity
-    Attributes
-      example_id => id
-        SomeEvent Value: "00000001-0000-4000-8000-000000000000"
-        SomeEntity Value: "00000001-0000-4000-8000-000000000000"
-      amount
-        SomeEvent Value: 11
-        SomeEntity Value: 11
-    Transformed and copied
-      time
-        SomeEvent Value (String): "2000-01-01T00:00:00.000Z"
-        SomeEntity Value (Time): 2000-01-01 00:00:00 UTC
-    Transformed and copied
-      some_time => other_time
-        SomeEvent Value (String): "2000-01-01T00:00:00.011Z"
-        SomeEntity Value (Time): 2000-01-01 00:00:00.011 UTC
+Handle SomeMessage
+  Handler: SomeHandler
+    Handler Class: SomeHandler
+    Entity Class: Something
+    Entity Data: {:id=>"e84533f2-53a5-492a-a8cc-ead48d3d780b", :total=>98}
+    Clock Time: 2020-08-12 23:04:11.668825 UTC
+    Input Message: SomeMessage
+      Message Class: SomeMessage
+      Attributes Assigned
+        something_id
+          Default Value: nil
+          Assigned Value: "e84533f2-53a5-492a-a8cc-ead48d3d780b"
+        amount
+          Default Value: nil
+          Assigned Value: 1
+        time
+          Default Value: nil
+          Assigned Value: "2020-08-12T23:04:10.668Z"
+      Metadata
+        Source Attributes Assigned
+          stream_name
+            Default Value: nil
+            Assigned Value: "something:command-e84533f2-53a5-492a-a8cc-ead48d3d780b"
+          position
+            Default Value: nil
+            Assigned Value: 11
+          global_position
+            Default Value: nil
+            Assigned Value: 111
+    Write: SomeEvent
+      Message Class: SomeEvent
+      Written
+        Remaining message tests are skipped
+      Stream name
+        Stream Name: something-e84533f2-53a5-492a-a8cc-ead48d3d780b
+        Written Stream Name: something-e84533f2-53a5-492a-a8cc-ead48d3d780b
+      Expected version
+        Expected Version: 1111
+        Written Expected Version: 1111
+    Written Message: SomeEvent
+      Message Class: SomeEvent
+      Source Message Class: SomeMessage
+      Follows
+        Stream Name: "something:command-e84533f2-53a5-492a-a8cc-ead48d3d780b"
+        Causation Stream Name: "something:command-e84533f2-53a5-492a-a8cc-ead48d3d780b"
+        Position: 11
+        Causation Position: 11
+        Global Position: 111
+        Causation Global Position: 111
+        Source Correlation Stream Name: nil
+        Correlation Stream Name: "someCorrelationStream"
+        Source Reply Stream Name: nil
+        Reply Stream Name: "someReplyStream"
+      Attributes Copied: SomeMessage => SomeEvent
+        something_id
+          SomeMessage Value: "e84533f2-53a5-492a-a8cc-ead48d3d780b"
+          SomeEvent Value: "e84533f2-53a5-492a-a8cc-ead48d3d780b"
+        amount => quantity
+          SomeMessage Value: 1
+          SomeEvent Value: 1
+        time
+          SomeMessage Value: "2020-08-12T23:04:10.668Z"
+          SomeEvent Value: "2020-08-12T23:04:10.668Z"
+      Attribute Value
+        processed_time
+          Attribute Value: "2020-08-12T23:04:11.668Z"
+          Compare Value: "2020-08-12T23:04:11.668Z"
+      Attributes Assigned
+        something_id
+          Default Value: nil
+          Assigned Value: "e84533f2-53a5-492a-a8cc-ead48d3d780b"
+        quantity
+          Default Value: nil
+          Assigned Value: 1
+        time
+          Default Value: nil
+          Assigned Value: "2020-08-12T23:04:10.668Z"
+        processed_time
+          Default Value: nil
+          Assigned Value: "2020-08-12T23:04:11.668Z"
+      Metadata
+        correlation_stream_name
+          Metadata Value: someCorrelationStream
+          Compare Value: someCorrelationStream
+        reply_stream_name
+          Metadata Value: someReplyStream
+          Compare Value: someReplyStream
 ```
 
 ### Projection Fixture API
