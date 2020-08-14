@@ -6,9 +6,9 @@ module Messaging
       include TestBench::Fixture
       include Initializer
 
-      initializer :message, :stream_name, :expected_version, :reply_stream_name, :action
+      initializer :message, :stream_name, :expected_version, :reply_stream_name, :test_block
 
-      def self.build(writer, message_class, &action)
+      def self.build(writer, message_class, &test_block)
         data = get_data(writer, message_class)
 
         message = data&.message
@@ -16,7 +16,7 @@ module Messaging
         expected_version = data&.expected_version
         reply_stream_name = data&.reply_stream_name
 
-        new(message, stream_name, expected_version, reply_stream_name, action)
+        new(message, stream_name, expected_version, reply_stream_name, test_block)
       end
 
       def self.get_data(writer, message_class)
@@ -46,7 +46,7 @@ module Messaging
         end
 
         context context_name do
-          if action.nil?
+          if test_block.nil?
             raise Error, "Write fixture must be executed with a block"
           end
 
@@ -55,7 +55,7 @@ module Messaging
           written = !message.nil?
 
           test "Written" do
-            if not action.nil?
+            if not test_block.nil?
               detail "Remaining message tests are skipped"
             end
 
@@ -64,7 +64,7 @@ module Messaging
 
           return if !written
 
-          action.call(self)
+          test_block.call(self)
         end
 
         message

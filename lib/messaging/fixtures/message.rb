@@ -26,17 +26,17 @@ module Messaging
         @title_context_name ||= "Message"
       end
 
-      initializer :message, :source_message, na(:title_context_name), :action
+      initializer :message, :source_message, na(:title_context_name), :test_block
 
-      def self.build(message, source_message=nil, title_context_name: nil, &action)
-        new(message, source_message, title_context_name, action)
+      def self.build(message, source_message=nil, title_context_name: nil, &test_block)
+        new(message, source_message, title_context_name, test_block)
       end
 
       def call
         context_name = title_context_name
 
         context context_name do
-          if action.nil?
+          if test_block.nil?
             raise Error, "Message fixture must be executed with a block"
           end
 
@@ -55,7 +55,7 @@ module Messaging
             detail "Source Message Class: #{source_message_class.name}"
           end
 
-          action.call(self)
+          test_block.call(self)
         end
       end
 
@@ -89,12 +89,12 @@ module Messaging
         )
       end
 
-      def assert_metadata(&action)
+      def assert_metadata(&test_block)
         fixture(
           Metadata,
           message.metadata,
           source_message&.metadata,
-          &action
+          &test_block
         )
       end
 

@@ -11,10 +11,10 @@ module Messaging
         entity.sequence
       end
 
-      initializer :handler, :input_message, :entity, :entity_version, :clock_time, :identifier_uuid, :action
+      initializer :handler, :input_message, :entity, :entity_version, :clock_time, :identifier_uuid, :test_block
 
-      def self.build(handler, input_message, entity=nil, entity_version=nil, clock_time: nil, identifier_uuid: nil, &action)
-        instance = new(handler, input_message, entity, entity_version, clock_time, identifier_uuid, action)
+      def self.build(handler, input_message, entity=nil, entity_version=nil, clock_time: nil, identifier_uuid: nil, &test_block)
+        instance = new(handler, input_message, entity, entity_version, clock_time, identifier_uuid, test_block)
 
         set_store_entity(handler, entity, entity_version)
         set_clock_time(handler, clock_time)
@@ -53,7 +53,7 @@ module Messaging
         context "Handler: #{handler.class.name.split('::').last}" do
           detail "Handler Class: #{handler.class.name}"
 
-          if action.nil?
+          if test_block.nil?
             raise Error, "Handler fixture must be executed with a block"
           end
 
@@ -70,30 +70,30 @@ module Messaging
 
           handler.(input_message)
 
-          action.call(self)
+          test_block.call(self)
         end
       end
 
-      def assert_input_message(&action)
+      def assert_input_message(&test_block)
         context_name = "Input Message"
         if not input_message.nil?
           context_name = "#{context_name}: #{input_message.class.message_type}"
         end
 
-        fixture(Message, input_message, title_context_name: context_name, &action)
+        fixture(Message, input_message, title_context_name: context_name, &test_block)
       end
 
-      def assert_written_message(written_message, &action)
+      def assert_written_message(written_message, &test_block)
         context_name = "Written Message"
         if not written_message.nil?
           context_name = "#{context_name}: #{written_message.class.message_type}"
         end
 
-        fixture(Message, written_message, input_message, title_context_name: context_name, &action)
+        fixture(Message, written_message, input_message, title_context_name: context_name, &test_block)
       end
 
-      def assert_write(message_class, &action)
-        fixture = fixture(Write, handler.write, message_class, &action)
+      def assert_write(message_class, &test_block)
+        fixture = fixture(Write, handler.write, message_class, &test_block)
         fixture.message
       end
 

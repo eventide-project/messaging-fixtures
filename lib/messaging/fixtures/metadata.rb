@@ -6,15 +6,15 @@ module Messaging
       include TestBench::Fixture
       include Initializer
 
-      initializer :metadata, :source_metadata, :action
+      initializer :metadata, :source_metadata, :test_block
 
-      def self.build(metadata, source_metadata=nil, &action)
-        new(metadata, source_metadata, action)
+      def self.build(metadata, source_metadata=nil, &test_block)
+        new(metadata, source_metadata, test_block)
       end
 
       def call
         context "Metadata" do
-          if action.nil?
+          if test_block.nil?
             raise Error, "Metadata fixture must be executed with a block"
           end
 
@@ -22,7 +22,7 @@ module Messaging
             test "Not nil" do
               detail "Metadata: nil"
 
-              if not action.nil?
+              if not test_block.nil?
                 detail "Remaining message tests are skipped"
               end
 
@@ -31,7 +31,7 @@ module Messaging
             return
           end
 
-          action.call(self)
+          test_block.call(self)
         end
       end
 
