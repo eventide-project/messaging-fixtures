@@ -353,7 +353,8 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 - `assert_attributes_assigned`
 - `assert_metadata`
 
-See the [Messaging::Fixtures::Message](TODO) class for details on the methods available for testing the written message and its metadata.
+<!-- TODO -->
+See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/messaging-fixtures/) class for details on the methods available for testing the written message and its metadata.
 
 ### Test the Handler's Writing of an Output Message
 
@@ -400,7 +401,8 @@ The following methods are available from the `write_fixture` block parameter, an
 - `assert_stream_name`
 - `assert_expected_version`
 
-See the [Messaging::Fixtures::Write](TODO) class for details on the methods available for testing the actuation of the writer.
+<!-- TODO -->
+See the [Messaging::Fixtures::Write](http://docs.eventide-project.org/user-guide/test-fixtures/messaging-fixtures/) class for details on the methods available for testing the actuation of the writer.
 
 ### Test the Output Message Sent to the Handler's Writer
 
@@ -456,7 +458,8 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 - `assert_attributes_assigned`
 - `assert_metadata`
 
-See the [Messaging::Fixtures::Message](TODO) class for details on the methods available for testing the written message and its metadata.
+<!-- TODO -->
+See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/messaging-fixtures/) class for details on the methods available for testing the written message and its metadata.
 
 ### Test That the Handler Has Not Written a Message
 
