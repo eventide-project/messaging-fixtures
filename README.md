@@ -119,6 +119,8 @@ context "Handle SomeMessage" do
         metadata.assert_reply_stream_name('someReplyStream')
       end
     end
+
+    handler.refute_write(SomeOtherEvent)
   end
 end
 ```
@@ -345,15 +347,23 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 | --- | --- | --- |
 | message_fixture | Instance of the the messaging fixture that is used to verify the input message | Messaging::Fixtures::Message |
 
-See the [Messaging::Fixtures::Message](TODO) class for details on the methods available for testing the input message and its metadata.
+**Methods**
 
-### Test a Handler's Writing of an Output Message
+- `assert_attribute_value`
+- `assert_attributes_assigned`
+- `assert_metadata`
+
+See the [Messaging::Fixtures::Message](TODO) class for details on the methods available for testing the written message and its metadata.
+
+### Test the Handler's Writing of an Output Message
 
 ``` ruby
 assert_write(message_class, &test_block)
 ```
 
 The tests performed on the write are executed by an instance of the `Messaging::Fixtures::Write` fixture, which is constructed and executed by the handler fixture's `assert_write` method. The `asert_write` method returns an instance of the message that was written so that the written message can be further tested using the handler fixture's `assert_output_message` method.
+
+If no written message matches the class specified by the `message_class` parameter, then the `test_block` block is not executed and the `assert_write` test fails.
 
 **Example**
 
@@ -375,8 +385,6 @@ Instance of `Messaging::Message` class that was sent to the handler's writer, an
 | message_class | Class of the output message that is expected to have been sent to the handler's writer | Proc |
 | test_block | Block used for invoking other assertions that are part of the write fixture's API | Proc |
 
-If no written message matches the class specified by the `message_class` parameter, then the `test_block` block is not executed and the `assert_write` test fails.
-
 **Block Parameter**
 
 The `write_fixture` argument is passed to the `test_block` if the block is given.
@@ -385,8 +393,6 @@ The `write_fixture` argument is passed to the `test_block` if the block is given
 | --- | --- | --- |
 | write_fixture | Instance of the the write fixture that is used to verify the actuation of the handler's writer | Messaging::Fixtures::Write |
 
-See the [Messaging::Fixtures::Write](TODO) class for details on the methods available for testing the actuation of the writer.
-
 **Methods**
 
 The following methods are available from the `write_fixture` block parameter, and on an instance of `Messaging::Fixtures::Write`:
@@ -394,11 +400,15 @@ The following methods are available from the `write_fixture` block parameter, an
 - `assert_stream_name`
 - `assert_expected_version`
 
+See the [Messaging::Fixtures::Write](TODO) class for details on the methods available for testing the actuation of the writer.
+
 ### Test the Output Message Sent to the Handler's Writer
 
 ``` ruby
 assert_written_message(written_message, &test_block)
 ```
+
+The tests performed on the message are executed by an instance of the `Messaging::Fixtures::Message` fixture, which is constructed and executed by the handler fixture's `assert_written_message` method. The message's metadata can also be tested. The metadata tests are executed by the message fixture's access to the `Messaging::Fixtures::Metadata` fixture.
 
 **Example**
 
@@ -438,7 +448,37 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 | --- | --- | --- |
 | message_fixture | Instance of the the messaging fixture that is used to verify the input message | Messaging::Fixtures::Message |
 
+**Methods**
+
+- `assert_attributes_copied`
+- `assert_attribute_value`
+- `assert_follows`
+- `assert_attributes_assigned`
+- `assert_metadata`
+
 See the [Messaging::Fixtures::Message](TODO) class for details on the methods available for testing the written message and its metadata.
+
+### Test That the Handler Has Not Written a Message
+
+``` ruby
+refute_write(message_class=nil)
+```
+
+**Example**
+
+``` ruby
+handler.refute_write(SomeOtherEvent)
+# or
+handler.refute_write
+```
+
+If no `message_class` argument is provided to the `refute_write` method, it ensures that no message was written at all.
+
+**Parameters**
+
+| Name | Description | Type |
+| --- | --- | --- |
+| message_class | Optional class of a message that is not expected to have been written by the handler | Messaging::Message |
 
 ## More Documentation
 

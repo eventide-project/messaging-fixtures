@@ -17,6 +17,10 @@ class SomeEvent
   attribute :processed_time, String
 end
 
+class SomeOtherEvent
+  include Messaging::Message
+end
+
 class Something
   include Schema::DataStructure
 
@@ -166,5 +170,7 @@ context "Handle SomeMessage" do
         metadata.assert_reply_stream_name('someReplyStream')
       end
     end
+
+    handler.refute_write(SomeOtherEvent)
   end
 end
