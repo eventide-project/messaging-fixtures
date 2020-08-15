@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
   s.name = 'evt-messaging-fixtures'
-  s.summary = "TestBench fixtures for the Messaging library"
+  s.summary = 'TestBench fixtures for the Messaging library'
   s.version = '1.1.0.0'
   s.description = ' '
 
