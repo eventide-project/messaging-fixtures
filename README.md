@@ -353,7 +353,7 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 - `assert_attributes_assigned`
 - `assert_metadata`
 
-See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture/) class and the [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture/) class  for details on the methods available for testing the input message and its metadata.
+See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture.html) class and the [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture.html) class  for details on the methods available for testing the input message and its metadata.
 
 ### Test the Handler's Writing of an Output Message
 
@@ -456,7 +456,7 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 - `assert_attributes_assigned`
 - `assert_metadata`
 
-See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture/) class and the [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture/) class  for details on the methods available for testing the written message and its metadata.
+See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture.html) class and the [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture.html) class  for details on the methods available for testing the written message and its metadata.
 
 ### Test That the Handler Has Not Written a Message
 
