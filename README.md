@@ -2,7 +2,7 @@
 
 [TestBench](http://test-bench.software/) fixtures for the [Messaging](https://github.com/eventide-project/messaging) library
 
-The Messaging Fixtures library provides a [TestBench test fixture](http://test-bench.software/user-guide/fixtures.html) for testing objects that are implementations of Eventide's [Messaging::Handle](http://docs.eventide-project.org/user-guide/handlers.html), [Messaging::Write](http://docs.eventide-project.org/user-guide/writing/message-writer.html). and [Messaging::Message](http://docs.eventide-project.org/user-guide/messages-and-message-data/messages.html). The test abstractions simplify and generalizes tests, reducing the test implementation effort and increasing test implementation clarity.
+The Messaging Fixtures library provides a [TestBench test fixture](http://test-bench.software/user-guide/fixtures.html) for testing objects that are implementations of Eventide's [Messaging::Handle](http://docs.eventide-project.org/user-guide/handlers.html), [Messaging::Write](http://docs.eventide-project.org/user-guide/writing/message-writer.html), and [Messaging::Message](http://docs.eventide-project.org/user-guide/messages-and-message-data/messages.html). The test abstractions simplify and generalizes tests, reducing the test implementation effort and increasing test implementation clarity.
 
 ## Fixture
 
