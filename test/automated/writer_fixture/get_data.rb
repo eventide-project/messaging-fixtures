@@ -1,6 +1,6 @@
 require_relative '../automated_init'
 
-context "Write Fixture" do
+context "Writer Fixture" do
   context "Get Data" do
     context "Written" do
       writer = Messaging::Write::Substitute.build
@@ -11,7 +11,7 @@ context "Write Fixture" do
 
       writer.(message, stream_name, expected_version: expected_version, reply_stream_name: reply_stream_name)
 
-      data = Write.get_data(writer, message.class)
+      data = Writer.get_data(writer, message.class)
 
       written_message = data.message
       written_stream_name = data.stream_name
@@ -44,8 +44,8 @@ context "Write Fixture" do
       writer.(message, stream_name)
 
       test "Is an error" do
-        assert_raises(Write::Error) do
-          Write.get_data(writer, message.class)
+        assert_raises(Writer::Error) do
+          Writer.get_data(writer, message.class)
         end
       end
     end
@@ -54,7 +54,7 @@ context "Write Fixture" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example
 
-      data = Write.get_data(writer, message.class)
+      data = Writer.get_data(writer, message.class)
 
       test "No data" do
         assert(data.nil?)

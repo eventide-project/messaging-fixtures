@@ -93,7 +93,7 @@ module Messaging
       end
 
       def assert_write(message_class, &test_block)
-        fixture = fixture(Write, handler.write, message_class, &test_block)
+        fixture = fixture(Writer, handler.write, message_class, &test_block)
         fixture.message
       end
 
@@ -102,7 +102,7 @@ module Messaging
 
         context_name = "No Write"
         if not message_class.nil?
-          write_telemetry_data = Write.get_data(writer, message_class)
+          write_telemetry_data = Writer.get_data(writer, message_class)
           written = !write_telemetry_data.nil?
           context_name = "#{context_name}: #{message_class.message_type}"
         else

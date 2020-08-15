@@ -1,6 +1,6 @@
 require_relative '../automated_init'
 
-context "Write Fixture" do
+context "Writer Fixture" do
   context "Assert Expected Version" do
     context "Write" do
       writer = Messaging::Write::Substitute.build
@@ -9,7 +9,7 @@ context "Write Fixture" do
 
       writer.(message, stream_name, expected_version: 11)
 
-      fixture = Write.build(writer, message.class)
+      fixture = Writer.build(writer, message.class)
 
       fixture.assert_expected_version(11)
 
@@ -27,7 +27,7 @@ context "Write Fixture" do
 
       writer.(message, stream_name, expected_version: 111)
 
-      fixture = Write.build(writer, message.class)
+      fixture = Writer.build(writer, message.class)
 
       fixture.assert_expected_version(11)
 

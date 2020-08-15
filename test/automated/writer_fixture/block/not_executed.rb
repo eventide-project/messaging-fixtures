@@ -1,6 +1,6 @@
 require_relative '../../automated_init'
 
-context "Write Fixture" do
+context "Writer Fixture" do
   context "Block" do
     context "Message Is Not Written" do
       writer = Messaging::Write::Substitute.build
@@ -8,7 +8,7 @@ context "Write Fixture" do
       stream_name = "example-#{message.example_id}"
 
       effect = nil
-      fixture = fixture = Write.build(writer, message.class) do
+      fixture = fixture = Writer.build(writer, message.class) do
         effect = :_
       end
 

@@ -1,6 +1,6 @@
 module Messaging
   module Fixtures
-    class Write
+    class Writer
       Error = Class.new(RuntimeError)
 
       include TestBench::Fixture

@@ -1,6 +1,6 @@
 require_relative '../automated_init'
 
-context "Write Fixture" do
+context "Writer Fixture" do
   context "Written" do
     writer = Messaging::Write::Substitute.build
     message = Controls::Event.example
@@ -8,7 +8,7 @@ context "Write Fixture" do
 
     writer.(message, stream_name)
 
-    fixture = Write.build(writer, message.class) {}
+    fixture = Writer.build(writer, message.class) {}
 
     fixture.()
 

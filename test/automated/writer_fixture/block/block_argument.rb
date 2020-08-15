@@ -1,23 +1,23 @@
 require_relative '../../automated_init'
 
-context "Write Fixture" do
+context "Writer Fixture" do
   context "Block" do
-    context "Is Executed" do
+    context "Block Argument" do
       writer = Messaging::Write::Substitute.build
       message = Controls::Event.example
       stream_name = "example-#{message.example_id}"
 
       writer.(message, stream_name)
 
-      effect = nil
-      fixture = Write.build(writer, message.class) do
-        effect = :_
+      argument = nil
+      fixture = Writer.build(writer, message.class) do |a|
+        argument = a
       end
 
       fixture.()
 
-      test "Block is executed" do
-        refute(effect.nil?)
+      test "Is a Write fixture" do
+        assert(argument.is_a?(Writer))
       end
     end
   end
