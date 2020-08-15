@@ -127,13 +127,19 @@ end
 
 _Note: This example is abridged for brevity. An unabridged version is included with the messaging fixtures: [https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb](https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb)_
 
-Running the test is no different than [running any TestBench test](http://test-bench.software/user-guide/running-tests.html). In its simplest form, running the test is done by passing the test file name to the `ruby` executable.
+## Running the Fixture
+
+Running the test is no different than [running any TestBench test](http://test-bench.software/user-guide/running-tests.html).
+
+For example, given a test file named `handler.rb` that uses the handler fixture, in a directory named `test`, the test is executed by passing the file name to the `ruby` executable.
 
 ``` bash
 ruby test/handler.rb
 ```
 
-The test script and the fixture work together as if they are the same test.
+The test script and the fixture work together as if they are part of the same test context, preserving output nesting between the test script file and the test fixture.
+
+## Handler Fixture Output
 
 ``` text
 Handle SomeMessage
@@ -172,9 +178,11 @@ Handle SomeMessage
 
 The output below the "Handle SomeMessage" line is from the handler fixture.
 
-### Detailed Output
+## Detailed Output
 
-The fixture will print more detailed output if the `TEST_BENCH_DETAIL` environment variable is set to `on`.
+In the event of any error or failed assertion, the test output will include additional detailed output that can be useful in understanding the context of the failure and the state of the fixture itself and the objects that it's testing.
+
+The detailed output can also be printed by setting the `TEST_BENCH_DETAIL` environment variable to `on`.
 
 ``` bash
 TEST_BENCH_DETAIL=on ruby test/handler.rb
@@ -270,11 +278,7 @@ Handle SomeMessage
           Compare Value: someReplyStream
 ```
 
-## Handler Fixture API
-
-Class: `Messaging::Fixtures::Handler`
-
-### Actuating the Handler Fixture
+## Actuating the Fixture
 
 The fixture is executed using TestBench's `fixture` method.
 
@@ -313,13 +317,15 @@ The following methods are available from the `handler_fixture` block parameter, 
 - `assert_written_message`
 - `refute_write`
 
-### Test Input Message Prerequisites
+## Test Input Message Prerequisites
 
 ``` ruby
 assert_input_message(&test_block)
 ```
 
-The tests performed on the message are executed by an instance of the `Messaging::Fixtures::Message` fixture, which is constructed and executed by the handler fixture's `assert_input_message` method. The message's metadata can also be tested. The metadata tests are executed by the message fixture's access to the `Messaging::Fixtures::Metadata` fixture.
+The `assert_input_message` method uses an instance of the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture.html) fixture to perform the input message tests.
+
+The message's metadata can also be tested. The metadata tests are executed by an instance of [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture.html) fixture.
 
 **Example**
 
@@ -347,21 +353,21 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 | --- | --- | --- |
 | message_fixture | Instance of the the messaging fixture that is used to verify the input message | Messaging::Fixtures::Message |
 
-**Methods**
+**Block Parameter Methods**
 
 - `assert_attribute_value`
 - `assert_attributes_assigned`
 - `assert_metadata`
 
-See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture.html) class and the [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture.html) class  for details on the methods available for testing the input message and its metadata.
-
-### Test the Handler's Writing of an Output Message
+## Test the Handler's Writing of an Output Message
 
 ``` ruby
 assert_write(message_class, &test_block)
 ```
 
-The tests performed on the write are executed by an instance of the `Messaging::Fixtures::Write` fixture, which is constructed and executed by the handler fixture's `assert_write` method. The `asert_write` method returns an instance of the message that was written so that the written message can be further tested using the handler fixture's `assert_output_message` method.
+The `assert_write` method uses an instance of the [Messaging::Fixtures::Writer](http://docs.eventide-project.org/user-guide/test-fixtures/writer-fixture.html) fixture to perform the write tests.
+
+The `asert_write` method returns an instance of the message that was written so that the written message can be further tested using the handler fixture's `assert_output_message` method.
 
 If no written message matches the class specified by the `message_class` parameter, then the `test_block` block is not executed and the `assert_write` test fails.
 
@@ -376,39 +382,39 @@ end
 
 **Returns**
 
-Instance of `Messaging::Message` class that was sent to the handler's writer, and whose class matches the `assert_write` method's `message_class` argument.
+The message that was written and whose class matches the `assert_write` method's `message_class` argument.
 
 **Parameters**
 
 | Name | Description | Type |
 | --- | --- | --- |
-| message_class | Class of the output message that is expected to have been sent to the handler's writer | Proc |
-| test_block | Block used for invoking other assertions that are part of the write fixture's API | Proc |
+| message_class | Class of the output message that is expected to have been written | Messaging::Message |
+| test_block | Block used for invoking other assertions that are part of the writer fixture's API | Proc |
 
 **Block Parameter**
 
-The `write_fixture` argument is passed to the `test_block` if the block is given.
+The `writer_fixture` argument is passed to the `test_block` if the block is given.
 
 | Name | Description | Type |
 | --- | --- | --- |
-| write_fixture | Instance of the the write fixture that is used to verify the actuation of the handler's writer | Messaging::Fixtures::Write |
+| writer_fixture | Instance of the the writer fixture that is used to verify the actuation of the handler's writer | Messaging::Fixtures::Write |
 
 **Methods**
 
-The following methods are available from the `write_fixture` block parameter, and on an instance of `Messaging::Fixtures::Write`:
+The following methods are available from the `writer_fixture` block parameter, and on an instance of `Messaging::Fixtures::Writer`:
 
 - `assert_stream_name`
 - `assert_expected_version`
 
-See the [Messaging::Fixtures::Writer](http://docs.eventide-project.org/user-guide/test-fixtures/writer-fixture.html) class for details on the methods available for testing the actuation of the writer.
-
-### Test the Output Message Sent to the Handler's Writer
+## Test the Output Message Sent to the Handler's Writer
 
 ``` ruby
 assert_written_message(written_message, &test_block)
 ```
 
-The tests performed on the message are executed by an instance of the `Messaging::Fixtures::Message` fixture, which is constructed and executed by the handler fixture's `assert_written_message` method. The message's metadata can also be tested. The metadata tests are executed by the message fixture's access to the `Messaging::Fixtures::Metadata` fixture.
+The `assert_written_message` method uses an instance of the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture.html) fixture to perform the written message tests.
+
+The message's metadata can also be tested. The metadata tests are executed by an instance of [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture.html) fixture.
 
 **Example**
 
@@ -448,7 +454,7 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 | --- | --- | --- |
 | message_fixture | Instance of the the messaging fixture that is used to verify the input message | Messaging::Fixtures::Message |
 
-**Methods**
+**Block Parameter Methods**
 
 - `assert_attributes_copied`
 - `assert_attribute_value`
@@ -456,9 +462,7 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 - `assert_attributes_assigned`
 - `assert_metadata`
 
-See the [Messaging::Fixtures::Message](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture.html) class and the [Messaging::Fixtures::Metadata](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture.html) class  for details on the methods available for testing the written message and its metadata.
-
-### Test That the Handler Has Not Written a Message
+## Test That the Handler Has Not Written a Message
 
 ``` ruby
 refute_write(message_class=nil)
@@ -479,6 +483,14 @@ If no `message_class` argument is provided to the `refute_write` method, it ensu
 | Name | Description | Type |
 | --- | --- | --- |
 | message_class | Optional class of a message that is not expected to have been written by the handler | Messaging::Message |
+
+## More Fixtures
+
+While the handler fixture is the most substantial in the messaging fixtures library, there are three other fixtures in the library that the handler fixture makes use of that can also be used on their own.
+
+- [Message Fixture](http://docs.eventide-project.org/user-guide/message-fixture.html)
+- [Message Metadata Fixture](http://docs.eventide-project.org/user-guide/message-metadata-fixture.html)
+- [Writer Fixture](http://docs.eventide-project.org/user-guide/writer-fixture.html)
 
 ## More Documentation
 
