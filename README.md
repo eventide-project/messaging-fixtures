@@ -125,7 +125,7 @@ context "Handle SomeMessage" do
 end
 ```
 
-_Note: This example is abridged for brevity. The unabridge version can be reviewed at: [https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb](https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb)_
+_Note: This example is abridged for brevity. An unabridged version is included with the messaging fixtures: [https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb](https://github.com/eventide-project/messaging-fixtures/blob/master/demo.rb)_
 
 Running the test is no different than [running any TestBench test](http://test-bench.software/user-guide/running-tests.html). In its simplest form, running the test is done by passing the test file name to the `ruby` executable.
 
