@@ -68,6 +68,7 @@ module Messaging
           attributes_context_name: "Attributes Assigned"
         )
       end
+      alias :assert_all_attributes_assigned :assert_attributes_assigned
 
       def assert_attributes_copied(attribute_names=nil)
         if source_message.nil?

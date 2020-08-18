@@ -30,7 +30,7 @@ context "Handler Fixture" do
   ) do |handler|
 
     handler.assert_input_message do |input_message|
-      input_message.assert_attributes_assigned
+      input_message.assert_all_attributes_assigned
 
       input_message.assert_metadata do |metadata|
         metadata.assert_source_attributes_assigned
@@ -54,7 +54,7 @@ context "Handler Fixture" do
       written_message.assert_attribute_value(:processed_time, Clock.iso8601(clock_time))
       written_message.assert_attribute_value(:sequence, message_sequence)
 
-      written_message.assert_attributes_assigned
+      written_message.assert_all_attributes_assigned
 
       written_message.assert_metadata do |metadata|
         metadata.assert_correlation_stream_name('someCorrelationStream')

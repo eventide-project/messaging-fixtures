@@ -9,7 +9,7 @@ context "Message Fixture" do
       message
     ) do |message|
 
-      message.assert_attributes_assigned
+      message.assert_all_attributes_assigned
 
     end
   end
