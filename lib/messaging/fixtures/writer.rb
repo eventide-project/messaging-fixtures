@@ -52,17 +52,19 @@ module Messaging
 
           detail "Message Class: #{message_class.inspect}"
 
+
+
           written = !message.nil?
 
           test "Written" do
-            if not test_block.nil?
+            if not written
               detail "Remaining message tests are skipped"
             end
 
             assert(written)
           end
 
-          return if !written
+          return if not written
 
           test_block.call(self)
         end

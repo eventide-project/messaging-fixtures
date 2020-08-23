@@ -50,6 +50,14 @@ module Messaging
           end
         end
 
+        module Random
+          def self.example_class
+            Class.new do
+              include Messaging::Message
+            end
+          end
+        end
+
         module Metadata
           def self.example
             metadata = Messaging::Message::Metadata.new
