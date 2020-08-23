@@ -6,7 +6,7 @@ module Messaging
       include TestBench::Fixture
       include Initializer
 
-      initializer :message, :stream_name, :expected_version, :reply_stream_name, :test_block
+      initializer :message_class, :message, :stream_name, :expected_version, :reply_stream_name, :test_block
 
       def self.build(writer, message_class, &test_block)
         data = get_data(writer, message_class)
@@ -16,7 +16,7 @@ module Messaging
         expected_version = data&.expected_version
         reply_stream_name = data&.reply_stream_name
 
-        new(message, stream_name, expected_version, reply_stream_name, test_block)
+        new(message_class, message, stream_name, expected_version, reply_stream_name, test_block)
       end
 
       def self.get_data(writer, message_class)
@@ -38,12 +38,7 @@ module Messaging
       end
 
       def call
-        message_class = message&.class
-
-        context_name = 'Write'
-        if not message_class.nil?
-          context_name = "#{context_name}: #{message_class&.message_type}"
-        end
+        context_name = "Write: #{message_class.message_type}"
 
         context context_name do
           if test_block.nil?
@@ -51,8 +46,6 @@ module Messaging
           end
 
           detail "Message Class: #{message_class.inspect}"
-
-
 
           written = !message.nil?
 
