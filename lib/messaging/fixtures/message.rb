@@ -23,7 +23,7 @@ module Messaging
       end
 
       def title_context_name
-        @title_context_name ||= "Message"
+        @title_context_name ||= "Message: #{message_type}"
       end
 
       initializer :message, :source_message, na(:title_context_name), :test_block
