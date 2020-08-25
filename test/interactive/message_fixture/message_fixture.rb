@@ -11,12 +11,16 @@ context "Message Fixture" do
     :time,
   ]
 
+  source_message.metadata.correlation_stream_name = 'someCorrelationStream'
+  source_message.metadata.reply_stream_name = 'someReplyStream'
+
   message = message_class.follow(source_message, copy: attribute_names)
 
-  message.processed_time = Controls::Event.processed_time
-  message.sequence = Controls::Event.sequence
+  processed_time = Controls::Event.processed_time
+  sequence = Controls::Event.sequence
 
-  message = Controls::Event.example
+  message.processed_time = processed_time
+  message.sequence = sequence
 
   fixture(
     Message,
@@ -25,8 +29,17 @@ context "Message Fixture" do
   ) do |message|
 
     message.assert_attributes_copied(attribute_names)
-    message.assert_attributes_assigned
+
+    message.assert_attribute_value(:processed_time, processed_time)
+    message.assert_attribute_value(:sequence, sequence)
+
     message.assert_follows
 
+    message.assert_attributes_assigned
+
+    message.assert_metadata do |metadata|
+      metadata.assert_correlation_stream_name('someCorrelationStream')
+      metadata.assert_reply_stream_name('someReplyStream')
+    end
   end
 end
