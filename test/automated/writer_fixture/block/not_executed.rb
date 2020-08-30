@@ -18,7 +18,7 @@ context "Writer Fixture" do
         assert(effect.nil?)
       end
 
-      context_text = 'Write'
+      context_text = "Write: #{message.class.message_type}"
       context "Context: \"#{context_text}\"" do
         printed = fixture.test_session.context?(context_text)
 

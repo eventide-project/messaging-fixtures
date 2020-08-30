@@ -23,7 +23,15 @@ module Messaging
       end
 
       def title_context_name
-        @title_context_name ||= "Message: #{message_type}"
+        if @title_context_name.nil?
+          @title_context_name = "Message"
+
+          if not message.nil?
+            @title_context_name = "#{@title_context_name}: #{message_type}"
+          end
+        end
+
+        @title_context_name
       end
 
       initializer :message, :source_message, na(:title_context_name), :test_block
