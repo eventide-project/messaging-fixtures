@@ -2,19 +2,17 @@ require_relative '../../automated_init'
 
 context "Message Fixture" do
   context "Title" do
-    context "Printed" do
-      message = Controls::Event.example
+    message = Controls::Event.example
 
-      fixture = Message.build(message) {}
+    fixture = Message.build(message) {}
 
-      fixture.()
+    fixture.()
 
-      context "Context Name" do
-        printed = fixture.test_session.context?("Message: #{message.class.message_type}")
+    context "Context Name" do
+      printed = fixture.test_session.context?("Message: #{message.class.message_type}")
 
-        test "Printed" do
-          assert(printed)
-        end
+      test "Printed" do
+        assert(printed)
       end
     end
   end

@@ -41,10 +41,17 @@ module Messaging
         @title_context_name
       end
 
-      initializer :message, :source_message, na(:print_title_context), na(:title_context_name), :test_block
+      def detail_message_class?
+        if @detail_message_class.nil?
+          @detail_message_class = true
+        end
+        @detail_message_class
+      end
 
-      def self.build(message, source_message=nil, print_title_context: nil, title_context_name: nil, &test_block)
-        new(message, source_message, print_title_context, title_context_name, test_block)
+      initializer :message, :source_message, na(:print_title_context), na(:title_context_name), na(:detail_message_class), :test_block
+
+      def self.build(message, source_message=nil, print_title_context: nil, title_context_name: nil, detail_message_class: nil, &test_block)
+        new(message, source_message, print_title_context, title_context_name, detail_message_class, test_block)
       end
 
       def call
@@ -71,7 +78,9 @@ module Messaging
           return
         end
 
-        detail "Message Class: #{message_class.name}"
+        if detail_message_class?
+          detail "Message Class: #{message_class.name}"
+        end
 
         if not source_message.nil?
           detail "Source Message Class: #{source_message_class.name}"
