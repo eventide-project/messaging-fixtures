@@ -22,6 +22,13 @@ module Messaging
         source_message_class.name.split('::').last
       end
 
+      def print_title_context?
+        if @print_title_context.nil?
+          @print_title_context = true
+        end
+        @print_title_context
+      end
+
       def title_context_name
         if @title_context_name.nil?
           @title_context_name = "Message"
@@ -34,37 +41,43 @@ module Messaging
         @title_context_name
       end
 
-      initializer :message, :source_message, na(:title_context_name), :test_block
+      initializer :message, :source_message, na(:print_title_context), na(:title_context_name), :test_block
 
-      def self.build(message, source_message=nil, title_context_name: nil, &test_block)
-        new(message, source_message, title_context_name, test_block)
+      def self.build(message, source_message=nil, print_title_context: nil, title_context_name: nil, &test_block)
+        new(message, source_message, print_title_context, title_context_name, test_block)
       end
 
       def call
-        context_name = title_context_name
-
-        context context_name do
-          if test_block.nil?
-            raise Error, "Message fixture must be executed with a block"
+        if print_title_context?
+          context "#{title_context_name}" do
+            call!
           end
-
-          if message.nil?
-            test "Not nil" do
-              detail "Message: nil"
-              detail "Remaining message tests are skipped"
-              refute(message.nil?)
-            end
-            return
-          end
-
-          detail "Message Class: #{message_class.name}"
-
-          if not source_message.nil?
-            detail "Source Message Class: #{source_message_class.name}"
-          end
-
-          test_block.call(self)
+        else
+          call!
         end
+      end
+
+      def call!
+        if test_block.nil?
+          raise Error, "Message fixture must be executed with a block"
+        end
+
+        if message.nil?
+          test "Not nil" do
+            detail "Message: nil"
+            detail "Remaining message tests are skipped"
+            refute(message.nil?)
+          end
+          return
+        end
+
+        detail "Message Class: #{message_class.name}"
+
+        if not source_message.nil?
+          detail "Source Message Class: #{source_message_class.name}"
+        end
+
+        test_block.call(self)
       end
 
       def assert_attributes_assigned(attribute_names=nil)
