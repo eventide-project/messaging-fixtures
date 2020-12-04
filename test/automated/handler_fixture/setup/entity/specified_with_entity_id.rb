@@ -17,7 +17,7 @@ context "Handler Fixture" do
             input_message,
             entity,
             11,
-            entity_id
+            entity_id: entity_id
           )
 
           store = handler.store
