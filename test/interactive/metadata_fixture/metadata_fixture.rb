@@ -17,7 +17,10 @@ context "Metadata Fixture" do
     f.assert_causation_attributes_assigned
     f.assert_workflow_attributes_assigned
 
+    f.assert_correlation_stream_name_assigned
     f.assert_correlation_stream_name(metadata.correlation_stream_name)
+
+    f.assert_reply_stream_name_assigned
     f.assert_reply_stream_name(metadata.reply_stream_name)
 
     f.assert_follows

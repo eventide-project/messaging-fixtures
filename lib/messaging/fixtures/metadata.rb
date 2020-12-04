@@ -38,7 +38,10 @@ module Messaging
       def assert_attributes_assigned(attribute_names=nil, context_title_qualifier: nil)
         attribute_names ||= Messaging::Message::Metadata.all_attribute_names
 
-        attributes_context_title = "#{context_title_qualifier} Attributes Assigned".lstrip
+        attributes_text = "Attribute"
+        attributes_text = attribute_names.length == 1 ? attributes_text : "#{attributes_text}s"
+
+        attributes_context_title = "#{context_title_qualifier} #{attributes_text} Assigned".lstrip
 
         fixture(
           Schema::Fixtures::Assignment,
@@ -74,6 +77,20 @@ module Messaging
         end
       end
 
+      def assert_correlation_stream_name_assigned
+        control_metadata = Messaging::Message::Metadata.new
+        default_correlation_stream_name = control_metadata.correlation_stream_name
+
+        correlation_stream_name = metadata.correlation_stream_name
+
+        test "Correlation stream name assigned" do
+          detail "Default Value: #{default_correlation_stream_name.inspect}"
+          detail "Assigned Value: #{correlation_stream_name.inspect}"
+
+          refute(correlation_stream_name == default_correlation_stream_name)
+        end
+      end
+
       def assert_reply_stream_name(reply_stream_name)
         metadata_value = metadata.reply_stream_name
 
@@ -81,6 +98,20 @@ module Messaging
           detail "Metadata Value: #{metadata_value}"
           detail "Compare Value: #{reply_stream_name}"
           assert(metadata_value == reply_stream_name)
+        end
+      end
+
+      def assert_reply_stream_name_assigned
+        control_metadata = Messaging::Message::Metadata.new
+        default_reply_stream_name = control_metadata.reply_stream_name
+
+        reply_stream_name = metadata.reply_stream_name
+
+        test "Reply stream name assigned" do
+          detail "Default Value: #{default_reply_stream_name.inspect}"
+          detail "Assigned Value: #{reply_stream_name.inspect}"
+
+          refute(reply_stream_name == default_reply_stream_name)
         end
       end
 
