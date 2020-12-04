@@ -28,7 +28,7 @@ context "Handler Fixture" do
             assert(stored_entity == entity)
           end
 
-          test "Entity version is the cache record's default version" do
+          test "Entity version is the cache record's version" do
             assert(version == 11)
           end
         end
