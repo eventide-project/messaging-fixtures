@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
   s.name = 'evt-messaging-fixtures'
   s.summary = 'TestBench fixtures for the Messaging library'
-  s.version = '1.1.6.0'
+  s.version = '1.1.6.1'
   s.description = ' '
 
   s.authors = ['The Eventide Project']
