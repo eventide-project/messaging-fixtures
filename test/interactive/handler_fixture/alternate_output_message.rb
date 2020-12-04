@@ -1,7 +1,7 @@
 require_relative '../interactive_init'
 
 context "Handler Fixture" do
-  context "Alternate Output" do
+  context "Alternate Output Message" do
     handler = Controls::Handler.example
     message = Controls::Message.example
 
