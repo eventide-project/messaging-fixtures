@@ -13,7 +13,7 @@ module Messaging
 
       initializer :handler, :input_message, :entity, :entity_version, :entity_id, :clock_time, :identifier_uuid, :test_block
 
-      def self.build(handler, input_message, entity=nil, entity_version=nil, entity_id=nil, clock_time: nil, identifier_uuid: nil, &test_block)
+      def self.build(handler, input_message, entity=nil, entity_version=nil, entity_id: nil, clock_time: nil, identifier_uuid: nil, &test_block)
         instance = new(handler, input_message, entity, entity_version, entity_id, clock_time, identifier_uuid, test_block)
 
         set_store_entity(handler, entity, entity_version, entity_id)
