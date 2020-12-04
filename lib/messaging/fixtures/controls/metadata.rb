@@ -17,6 +17,8 @@ module Messaging
 
           metadata.reply_stream_name = reply_stream_name
 
+          metadata.properties = properties
+
           metadata.time = time
 
           metadata.schema_version = schema_version
@@ -54,6 +56,12 @@ module Messaging
 
         def self.reply_stream_name
           'someReplyStream'
+        end
+
+        def self.properties
+          {
+            some_property: 'some property value'
+          }
         end
 
         def self.time
