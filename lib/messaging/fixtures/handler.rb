@@ -11,22 +11,24 @@ module Messaging
         entity.sequence
       end
 
-      initializer :handler, :input_message, :entity, :entity_version, :clock_time, :identifier_uuid, :test_block
+      initializer :handler, :input_message, :entity, :entity_version, :entity_id, :clock_time, :identifier_uuid, :test_block
 
-      def self.build(handler, input_message, entity=nil, entity_version=nil, clock_time: nil, identifier_uuid: nil, &test_block)
-        instance = new(handler, input_message, entity, entity_version, clock_time, identifier_uuid, test_block)
+      def self.build(handler, input_message, entity=nil, entity_version=nil, entity_id=nil, clock_time: nil, identifier_uuid: nil, &test_block)
+        instance = new(handler, input_message, entity, entity_version, entity_id, clock_time, identifier_uuid, test_block)
 
-        set_store_entity(handler, entity, entity_version)
+        set_store_entity(handler, entity, entity_version, entity_id)
         set_clock_time(handler, clock_time)
         set_identifier_uuid(handler, identifier_uuid)
 
         instance
       end
 
-      def self.set_store_entity(handler, entity, entity_version)
+      def self.set_store_entity(handler, entity, entity_version, entity_id)
         return if entity.nil?
 
-        handler.store.add(entity.id, entity, entity_version)
+        entity_id ||= entity.id
+
+        handler.store.add(entity_id, entity, entity_version)
       end
 
       def self.set_clock_time(handler, clock_time)
