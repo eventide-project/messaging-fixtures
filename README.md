@@ -488,9 +488,9 @@ If no `message_class` argument is provided to the `refute_write` method, it ensu
 
 While the handler fixture is the most substantial in the messaging fixtures library, there are three other fixtures in the library that the handler fixture makes use of that can also be used on their own.
 
-- [Message Fixture](http://docs.eventide-project.org/user-guide/message-fixture.html)
-- [Message Metadata Fixture](http://docs.eventide-project.org/user-guide/message-metadata-fixture.html)
-- [Writer Fixture](http://docs.eventide-project.org/user-guide/writer-fixture.html)
+- [Message Fixture](http://docs.eventide-project.org/user-guide/test-fixtures/message-fixture.html)
+- [Message Metadata Fixture](http://docs.eventide-project.org/user-guide/test-fixtures/message-metadata-fixture.html)
+- [Writer Fixture](http://docs.eventide-project.org/user-guide/test-fixtures/writer-fixture.html)
 
 ## More Documentation
 
