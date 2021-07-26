@@ -71,6 +71,12 @@ module Messaging
           }
         end
 
+        def self.local_properties
+          {
+            some_local_property: 'some local property value'
+          }
+        end
+
         def self.time
           ::Time.utc(2000, 1, 1, 0, 0, 0, 11)
         end
