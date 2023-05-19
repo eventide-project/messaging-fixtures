@@ -18,6 +18,7 @@ module Messaging
           metadata.reply_stream_name = reply_stream_name
 
           metadata.properties = properties
+          metadata.local_properties = local_properties
 
           metadata.time = time
 
@@ -60,7 +61,13 @@ module Messaging
 
         def self.properties
           {
-            some_property: 'some property value'
+            :some_property => 'some property value'
+          }
+        end
+
+        def self.local_properties
+          {
+            :some_local_property => 'some local property value'
           }
         end
 
