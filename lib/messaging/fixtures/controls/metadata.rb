@@ -39,15 +39,15 @@ module Messaging
         end
 
         def self.causation_message_stream_name
-          Message::Metadata.stream_name
+          stream_name
         end
 
         def self.causation_message_position
-          Message::Metadata.position
+          position
         end
 
         def self.causation_message_global_position
-          Message::Metadata.global_position
+          global_position
         end
 
         def self.correlation_stream_name
