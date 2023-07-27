@@ -15,7 +15,7 @@ context "Message Fixture" do
 
       fixture.assert_attribute_value(attribute_name, value)
 
-      context attribute_name do
+      context "#{attribute_name}" do
         passed = fixture.test_session.test_passed?("#{attribute_name}")
 
         test "Passed" do
@@ -37,7 +37,7 @@ context "Message Fixture" do
 
       fixture.assert_attribute_value(attribute_name, SecureRandom.hex)
 
-      context attribute_name do
+      context "#{attribute_name}" do
         failed = fixture.test_session.test_failed?("#{attribute_name}")
 
         test "Failed" do

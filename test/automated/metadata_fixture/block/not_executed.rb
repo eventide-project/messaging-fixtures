@@ -25,9 +25,8 @@ context "Metadata Fixture" do
         end
       end
 
-      metadata_context = fixture.test_session[context_text]
       context "Not nil" do
-        failed = metadata_context.test_failed?('Not nil')
+        failed = fixture.test_session.test_failed?(context_text, 'Not nil')
 
         test "Failed" do
           assert(failed)
@@ -35,7 +34,7 @@ context "Metadata Fixture" do
       end
 
       context "Skipped Tests Detail Notice" do
-        printed = metadata_context.detail?('Remaining message tests are skipped')
+        printed = fixture.test_session.detail?(context_text, 'Remaining message tests are skipped')
 
         test "Printed" do
           assert(printed)

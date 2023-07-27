@@ -28,8 +28,6 @@ context "Message Fixture" do
       end
     end
 
-    attribute_context = fixture.test_session[context_text]
-
     assignments = [
       'example_id',
       'quantity => amount',
@@ -38,7 +36,7 @@ context "Message Fixture" do
 
     assignments.each do |assignment|
       context "#{assignment}" do
-        passed = attribute_context.test_passed?(assignment)
+        passed = fixture.test_session.test_passed?(context_text, assignment)
 
         test "Passed" do
           assert(passed)

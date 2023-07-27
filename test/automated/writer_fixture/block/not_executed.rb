@@ -27,9 +27,8 @@ context "Writer Fixture" do
         end
       end
 
-      write_context = fixture.test_session[context_text]
       context "Written" do
-        failed = write_context.test_failed?('Written')
+        failed = fixture.test_session.test_failed?(context_text, 'Written')
 
         test "Failed" do
           assert(failed)
@@ -37,7 +36,7 @@ context "Writer Fixture" do
       end
 
       context "Skipped Tests Detail Notice" do
-        printed = write_context.detail?('Remaining message tests are skipped')
+        printed = fixture.test_session.detail?(context_text, 'Remaining message tests are skipped')
 
         test "Printed" do
           assert(printed)

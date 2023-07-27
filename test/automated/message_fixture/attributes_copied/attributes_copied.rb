@@ -28,10 +28,8 @@ context "Message Fixture" do
       end
     end
 
-    attribute_context = fixture.test_session[context_text]
-
     context "example_id" do
-      passed = attribute_context.test_passed?('example_id')
+      passed = fixture.test_session.test_passed?(context_text, 'example_id')
 
       test "Passed" do
         assert(passed)
@@ -39,7 +37,7 @@ context "Message Fixture" do
     end
 
     context "quantity => amount" do
-      passed = attribute_context.test_passed?('quantity => amount')
+      passed = fixture.test_session.test_passed?(context_text, 'quantity => amount')
 
       test "Passed" do
         assert(passed)
@@ -47,7 +45,7 @@ context "Message Fixture" do
     end
 
     context "time" do
-      passed = attribute_context.test_passed?('time')
+      passed = fixture.test_session.test_passed?(context_text, 'time')
 
       test "Passed" do
         assert(passed)
