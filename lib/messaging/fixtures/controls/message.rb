@@ -47,6 +47,7 @@ module Messaging
             include Messaging::Message
 
             attribute :some_attribute, String
+            attribute :some_other_attribute, String
           end
         end
 

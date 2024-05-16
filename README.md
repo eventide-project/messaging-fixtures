@@ -110,7 +110,7 @@ context "Handle SomeMessage" do
         :time,
       ])
 
-      written_message.assert_attribute_value(:processed_time, Clock.iso8601(processed_time))
+      written_message.assert_attribute_values(processed_time: Clock.iso8601(processed_time))
 
       written_message.assert_all_attributes_assigned
 
@@ -356,6 +356,7 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 **Block Parameter Methods**
 
 - `assert_attribute_value`
+- `assert_attribute_values`
 - `assert_attributes_assigned`
 - `assert_metadata`
 
@@ -428,7 +429,7 @@ handler_fixture.assert_written_message(output_message) do |written_message_fixtu
     :time,
   ])
 
-  written_message_fixture.assert_attribute_value(:processed_time, Clock.iso8601(processed_time))
+  written_message_fixture.assert_attribute_values(processed_time: Clock.iso8601(processed_time))
 
   written_message_fixture.assert_all_attributes_assigned
 
@@ -458,6 +459,7 @@ The `message_fixture` argument is passed to the `test_block` if the block is giv
 
 - `assert_attributes_copied`
 - `assert_attribute_value`
+- `assert_attribute_values`
 - `assert_follows`
 - `assert_attributes_assigned`
 - `assert_metadata`

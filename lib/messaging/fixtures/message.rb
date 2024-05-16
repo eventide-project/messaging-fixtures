@@ -138,13 +138,25 @@ module Messaging
 
       def assert_attribute_value(name, value)
         context "Attribute Value" do
-          attribute_value = message.public_send(name)
+          assert_attribute_value!(name, value)
+        end
+      end
 
-          test "#{name}" do
-            detail "Attribute Value: #{attribute_value.inspect}"
-            detail "Compare Value: #{value.inspect}"
+      def assert_attribute_value!(name, value)
+        attribute_value = message.public_send(name)
 
-            assert(attribute_value == value)
+        test "#{name}" do
+          detail "Attribute Value: #{attribute_value.inspect}"
+          detail "Compare Value: #{value.inspect}"
+
+          assert(attribute_value == value)
+        end
+      end
+
+      def assert_attribute_values(attributes)
+        context "Attribute Values" do
+          attributes.each do |name, value|
+            assert_attribute_value!(name, value)
           end
         end
       end
