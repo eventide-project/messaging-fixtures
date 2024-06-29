@@ -27,7 +27,7 @@ class Something
   LIMIT = 100
 
   attribute :id, String
-  attribute :total, Integer, default: 0
+  attribute :total, Integer, default: -> { 0 }
 
   def accumulate(quantity)
     self.total += quantity

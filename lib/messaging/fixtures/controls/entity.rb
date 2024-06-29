@@ -6,7 +6,7 @@ module Messaging
           include Schema::DataStructure
 
           attribute :id, String
-          attribute :alternate_condition, Boolean, default: false
+          attribute :alternate_condition, Boolean, default: -> { false }
           attribute :sequence, Integer
 
           alias :alternate_condition? :alternate_condition
